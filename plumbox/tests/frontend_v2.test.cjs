@@ -35,7 +35,7 @@ function panel(fetchImpl, fastTimers = false) {
     setTimeout:fastTimers ? (fn,ms)=>setTimeout(fn,Math.min(ms,30)) : setTimeout,clearTimeout,setInterval,clearInterval,
   };
   vm.createContext(context);
-  const exported = '  render = async () => {}; drawMainHistoryChart = () => {}; drawOverviewHistoryChart = () => {}; renderOverviewAlarms = () => {}; toast = () => {};\n  globalThis.panel = {state, api, fetchSnapshot, checkAuth, recoverAfterAppResume, updateLockButton, loadInitialDataWithRetry, executeWrite, schemeBurnerState, installationSchemeHtml, hysteresisSummaryHtml, loadPowerRuntime, powerRuntimeHtml, paintLineChart, sectionHtml, overviewHtml, sparklineSvg, appendOverviewTemperatureSample, loadOverviewExtras, editorHtml, historyHtml, chartSeries, loadCycleSummary, hourlyChartTicks, serviceHtml, filteredHtml};';
+  const exported = '  render = async () => {}; drawMainHistoryChart = () => {}; drawOverviewHistoryChart = () => {}; renderOverviewAlarms = () => {}; toast = () => {};\n  globalThis.panel = {state, api, fetchSnapshot, checkAuth, recoverAfterAppResume, updateLockButton, loadInitialDataWithRetry, executeWrite, schemeBurnerState, installationSchemeHtml, hysteresisSummaryHtml, loadPowerRuntime, powerRuntimeHtml, paintLineChart, sectionHtml, overviewHtml, sparklineSvg, appendOverviewTemperatureSample, loadOverviewExtras, editorHtml, historyHtml, chartSeries, loadCycleSummary, hourlyChartTicks, serviceHtml, filteredHtml, overviewDevicesHtml};';
   assert(source.includes('  init();'));
   vm.runInContext(source.replace('  init();', exported), context);
   context.panel.state.uiReady=true;
@@ -233,7 +233,7 @@ test('overview and detail runtime cards show only recorded values and correct sh
   const p=panel();p.state.snapshot={values:{},mixers:{}};
   p.state.powerRuntime={seconds:{'100':262*60,'50':498*60,'30':374*60},covered_seconds:7200,unknown_work_seconds:60};
   const html=p.overviewHtml();
-  assert(!html.includes('URZĄDZENIA / STAN')); assert(html.includes('CZASY PRACY'));
+  assert(html.includes('URZĄDZENIA / STAN')); assert(html.includes('CZASY PRACY'));
   for(const expected of ['4 h 22 min 0 s','8 h 18 min 0 s','6 h 14 min 0 s','23% czasu pracy','44% czasu pracy','33% czasu pracy'])assert(html.includes(expected),expected);
   const detail=p.powerRuntimeHtml(true);
   assert(detail.includes('Zarejestrowano danych:'));assert(detail.includes('Praca przy innym lub nieznanym poziomie:'));
@@ -376,7 +376,7 @@ test('merged overview starts with hydraulic scheme and omits removed widgets',()
  const p=panel();p.state.snapshot={connected:true,values:{heating_temp:67.1,feeder_temp:41,outside_temp:9.8,exhaust_temp:74.6,state_label:'Postój'},mixers:{}};
  const html=p.overviewHtml();
  assert(html.indexOf('data-installation-scheme') < html.indexOf('OBCIĄŻENIE'));
- for(const removed of ['URZĄDZENIA / STAN','overviewHistoryCanvas','hero-card','>PODAJNIK</div>','scheme-legend','SCHEMAT HYDRAULICZNY · UKŁAD DEKLAROWANY']) assert(!html.includes(removed),removed);
+ for(const removed of ['overviewHistoryCanvas','hero-card','>PODAJNIK</div>','scheme-legend','SCHEMAT HYDRAULICZNY · UKŁAD DEKLAROWANY']) assert(!html.includes(removed),removed);
  for(const retained of ['67,1','41','9,8','74,6','overviewPowerRuntime','data-open-view="alarms"']) assert(html.includes(retained),retained);
  assert(html.includes('Temp. podajnika'));
 });
@@ -478,4 +478,15 @@ test('airflow view pairs feed-time corrections with airflow and omits unavailabl
  for(const name of names){const at=html.indexOf('data-param-name="'+name+'"');assert(at>last,name);last=at}
  delete p.state.snapshot.parameters.feeder_correction_50;
  assert(!p.filteredHtml('airflow').includes('data-param-name="feeder_correction_50"'));
+});
+
+
+test('overview restores six live device states beside monthly runtime without guessing',()=>{
+ const p=panel();p.state.snapshot={connected:true,values:{heating_pump:true,water_heater_pump:false,feeder:true,lighter:false,fan:false},mixers:{'0':{values:{pump:true}}}};
+ let html=p.overviewDevicesHtml();assert.equal((html.match(/class="device-line/g)||[]).length,6);
+ assert.equal((html.match(/device-line state-on/g)||[]).length,3);assert.equal((html.match(/device-line state-off/g)||[]).length,3);
+ const overview=p.overviewHtml();assert(overview.includes('middle-row overview-bottom-row'));
+ assert(overview.indexOf('URZĄDZENIA / STAN')<overview.indexOf('id="overviewPowerRuntime"'));
+ delete p.state.snapshot.values.feeder;assert.equal((p.overviewDevicesHtml().match(/BRAK DANYCH/g)||[]).length,1);
+ p.state.snapshot.connected=false;html=p.overviewDevicesHtml();assert.equal((html.match(/BRAK DANYCH/g)||[]).length,6);assert(!html.includes('state-on'));
 });

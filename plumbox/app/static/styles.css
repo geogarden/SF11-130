@@ -1000,3 +1000,16 @@ td strong { color: var(--text-strong); }
 /* Ikona HKS zachowuje kwadratowe proporcje i przezroczyste tło. */
 .brand-logo {width:40px;height:41px;object-fit:contain;filter:none}
 @media(min-width:1025px){.sidebar-collapsed .brand-logo{width:44px;height:45px}}
+
+/* SF11/130: ciepłe ramki i miękkie cieniowanie w podglądzie. */
+.merged-overview {--overview-orange-border:color-mix(in srgb,#ec812e 42%,var(--line));--overview-orange-wash:color-mix(in srgb,#ec812e 12%,transparent)}
+.merged-overview .card:not(.alarm-active) {border:1px solid var(--overview-orange-border);background:radial-gradient(ellipse at 0 0,var(--overview-orange-wash),transparent 64%),var(--surface);box-shadow:0 5px 18px #00000018,inset 0 1px 0 #ffffff04}
+.merged-overview .scheme-canvas {border-color:var(--overview-orange-border);box-shadow:0 5px 20px #00000020}
+.merged-overview .scheme-status-strip {border-color:var(--overview-orange-border)}
+.merged-overview .metric-top > span {font-size:20px;min-width:23px;line-height:1.1;opacity:1}
+.overview-devices {min-width:0}.overview-devices .device-line {grid-template-columns:34px minmax(0,1fr) auto;min-height:48px}
+.overview-devices .device-state-icon {width:32px;height:32px;font-size:20px}
+.overview-devices .state-pill {white-space:nowrap}
+.side-nav .nav-item > span:first-child {font-size:18px}
+@media(min-width:1025px){.sidebar-collapsed .side-nav .nav-item > span:first-child{font-size:30px;width:34px}}
+@media(max-width:600px){.overview-devices .device-line{font-size:12px;gap:7px}.overview-devices .state-pill{font-size:9px;padding:4px 7px}}

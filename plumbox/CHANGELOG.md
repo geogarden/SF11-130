@@ -1,3 +1,10 @@
+## 1.0.1
+
+- Na stronie głównej dodano pomarańczowe obramowania i delikatne cieniowanie kafli oraz ramkę schematu.
+- Przywrócono Urządzenia / stan obok miesięcznych Czasów pracy; na telefonie karty układają się pionowo.
+- Powiększono ikony kafli, stanów urządzeń i menu. Brak połączenia lub flagi urządzenia nie jest przedstawiany jako wyłączenie.
+- Odświeżono pamięć podręczną WWW.
+
 ## 1.0.0 — SF11/130
 
 - Osobny dodatek oparty na PlumBox 2.8.52, slug sf11_130.

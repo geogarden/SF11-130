@@ -921,6 +921,20 @@
     });
   }
 
+  function overviewDevicesHtml() {
+    const connected = state.snapshot?.connected === true;
+    const deviceState = key => connected ? booleanValue(val(key, null)) : null;
+    const mixer = state.snapshot?.mixers?.["0"]?.values || {};
+    return `<article class="card overview-devices"><div class="panel-title">URZĄDZENIA / STAN</div><div class="device-table">
+      ${deviceLine("♨", "Pompa kotłowa", deviceState("heating_pump"))}
+      ${deviceLine("💧", "Pompa CWU", deviceState("water_heater_pump"))}
+      ${deviceLine("◉", "Pompa CO za mieszaczem", connected ? booleanValue(mixer.pump ?? null) : null)}
+      ${deviceLine("⚙", "Podajnik", deviceState("feeder"))}
+      ${deviceLine("♨", "Zapalarka", deviceState("lighter"))}
+      ${deviceLine("✥", "Wentylator", deviceState("fan"))}
+    </div></article>`;
+  }
+
   function overviewHtml() {
     const mixer = state.snapshot?.mixers?.["0"]?.values || {};
     const heating = finiteNumber(val("heating_temp", null));
@@ -953,7 +967,7 @@
         </div>
 
 
-      <div id="overviewPowerRuntime">${powerRuntimeHtml()}</div>
+      <div class="middle-row overview-bottom-row">${overviewDevicesHtml()}<div id="overviewPowerRuntime">${powerRuntimeHtml()}</div></div>
     </div></div>`;
   }
 
