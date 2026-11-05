@@ -1,4 +1,4 @@
-"""Connection URLs are passed to the actual 0.7.3 entry point; no boiler required."""
+"""Connection URLs are passed to the actual 0.7.6 entry point; no boiler required."""
 import asyncio
 from importlib.metadata import version
 from types import SimpleNamespace
@@ -14,7 +14,7 @@ from app.plum_service import PlumService, TransportPhaseError
  ('serial','192.168.1.20','/dev/ttyUSB2','/dev/ttyUSB2'),
 ])
 def test_connection_uses_serial_for_url(monkeypatch,kind,host,path,expected):
- assert version('pyplumio')=='0.7.3'
+ assert version('pyplumio')=='0.7.6'
  real_factory=pyplumio.serial_for_url
  calls=[]
  class Connection:

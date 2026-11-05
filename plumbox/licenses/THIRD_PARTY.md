@@ -14,6 +14,6 @@ Plik `app/static/sf11130.jpg` to zdjęcie kotła HKS Lazar SF 11/130 dostarczone
 
 Widok i znaczenie planu „Praca kotła” zaadaptowano z projektu
 https://github.com/geogarden/ecomax-esp32-gateway (main a21f66a1b75cb7f2b1788a832ffdb49ad2fef4e1).
-PlumBox korzysta z natywnego kodowania PyPlumIO 0.7.3; kod firmware ESP nie jest uruchamiany w dodatku.
+PlumBox korzysta z natywnego kodowania PyPlumIO 0.7.6; kod firmware ESP nie jest uruchamiany w dodatku.
 Informacja licencyjna projektu źródłowego: [ecomax-esp32-gateway-MIT.txt](ecomax-esp32-gateway-MIT.txt).
 

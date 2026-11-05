@@ -1,4 +1,4 @@
-"""Controller-owned boiler_work plan (index 3), through PyPlumIO 0.7.3.
+"""Controller-owned boiler_work plan (index 3), through PyPlumIO 0.7.6.
 
 UI/semantics adapted from geogarden/ecomax-esp32-gateway, main a21f66a.
 Monday first in the API; PyPlumIO's wire order remains Sunday first.

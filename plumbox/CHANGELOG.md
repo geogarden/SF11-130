@@ -1,3 +1,10 @@
+## 1.0.3
+
+- Zaktualizowano bibliotekę PyPlumIO z 0.7.3 do 0.7.6.
+- Zweryfikowano połączenia TCP/RS485 i USB, harmonogram, mapowania i obsługę sesji z nową biblioteką.
+- Ujednolicono zależności, dokumentację i test wersji biblioteki.
+- Odświeżono pamięć podręczną WWW.
+
 ## 1.0.2
 
 - Usunięto powielony nagłówek Serwis nad przyciskiem SERWIS.
