@@ -1,3 +1,10 @@
+## 1.0.2
+
+- Usunięto powielony nagłówek Serwis nad przyciskiem SERWIS.
+- Połączono H1/H2 i histerezę oraz Korekty nadmuchu i pelletu w menu Spalanie z dwiema zakładkami.
+- Zachowano odświeżanie progów H1/H2, edycję nastaw i przekierowania ze starszych widoków do nowych zakładek.
+- Odświeżono pamięć podręczną WWW.
+
 ## 1.0.1
 
 - Na stronie głównej dodano pomarańczowe obramowania i delikatne cieniowanie kafli oraz ramkę schematu.

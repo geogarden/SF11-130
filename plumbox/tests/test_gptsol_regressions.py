@@ -1558,7 +1558,8 @@ def test_service_work_view_contains_all_four_econet_parameters_in_order():
     assert 'fuel_calibration: "PRACA"' in js
     assert 'data-view="service"' in html
     assert '["fuel_calibration","PRACA"]' in js
-    assert html.index('data-view="service"') > html.index('<div class="nav-group">Serwis</div>')
+    assert html.count('data-view="service"') == 1
+    assert '<div class="nav-group">Serwis</div>' not in html
     assert "function userFirst(parameters)" in js
 
 
@@ -1753,8 +1754,8 @@ def test_installation_specific_pump_labels_are_explicit():
     root = Path(__file__).resolve().parents[1]
     app_js = (root / "app" / "static" / "app.js").read_text(encoding="utf-8")
 
-    assert 'deviceLine("♨", "Pompa kotłowa"' not in app_js
-    assert 'deviceLine("◉", "Pompa CO za mieszaczem"' not in app_js
+    assert 'deviceLine("♨", "Pompa kotłowa", deviceState("heating_pump"))' in app_js
+    assert 'deviceLine("◉", "Pompa CO za mieszaczem", connected ? booleanValue(mixer.pump ?? null) : null)' in app_js
     assert 'deviceLine("♨", "Pompa CO"' not in app_js
     assert 'deviceLine("◉", "Pompa mieszacza"' not in app_js
 

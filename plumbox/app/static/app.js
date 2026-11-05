@@ -7,6 +7,7 @@
     publicConfig: null,
     activeView: "overview",
     serviceSection: "fuel_calibration",
+    combustionSection: "hysteresis",
     powerRuntime48: null,
     token: localStorage.getItem("plumbox_token") || "",
     unlocked: false,
@@ -69,6 +70,7 @@
     account: "MOJE KONTO",
     overview: "PODGLĄD KOTŁA",
     service: "SERWIS",
+    combustion: "SPALANIE",
     installation: "SCHEMAT INSTALACJI",
     heating: "CO I KOCIOŁ",
     work_schedule: "HARMONOGRAM PRACY KOTŁA",
@@ -691,7 +693,7 @@
   }
 
   function refreshHysteresisSummary() {
-    if (state.activeView !== "hysteresis") return;
+    if (!isHysteresisView()) return;
     const current = $("hysteresisSummary");
     if (!current) return;
 
@@ -1003,6 +1005,15 @@
     return `<article class="parameter-card" data-risk="${escapeHtml(parameter.risk)}" data-access="${escapeHtml(parameter.access || "service")}" data-param-scope="${escapeHtml(parameter.scope)}" data-param-index="${escapeHtml(parameter.index)}" data-param-name="${escapeHtml(parameter.name)}"><div class="parameter-top"><div class="parameter-title">${escapeHtml(parameter.label)}</div><span class="risk-tag ${escapeHtml(badgeClass)}">${badge}</span></div><div class="parameter-current">${escapeHtml(parameterValueLabel(parameter))}</div><div class="range-note">${escapeHtml(parameterRangeLabel(parameter))}</div>${editorHtml(parameter)}</article>`;
   }
 
+  const combustionSections = [["hysteresis","H1/H2 i histereza"],["airflow","Korekty nadmuchu i pelletu"]];
+  function isHysteresisView() {
+    return state.activeView === "hysteresis" || (state.activeView === "combustion" && state.combustionSection === "hysteresis");
+  }
+  function combustionHtml() {
+    const selected = state.combustionSection;
+    return `<div class="service-tabs combustion-tabs" role="group" aria-label="Sekcje spalania">${combustionSections.map(([key,label]) => `<button data-combustion-section="${key}" class="${selected === key ? "active" : ""}" aria-pressed="${selected === key}">${label}</button>`).join("")}</div>` + filteredHtml(selected);
+  }
+
   const serviceSections = [["fuel_calibration","PRACA"],["kindling","Rozpalanie"],["supervision","Nadzór"],["burning_off","Wygaszanie"],["cleaning","Czyszczenie"],["protections","Zabezpieczenia"]];
   function serviceHtml() {
     const selected = state.serviceSection;
@@ -1174,6 +1185,8 @@
       const target = event.target instanceof Element ? event.target : event.target?.parentElement;
       if (!target) return;
 
+      const combustionButton = target.closest("[data-combustion-section]");
+      if (combustionButton) { state.combustionSection = combustionButton.dataset.combustionSection; render(); return; }
       const serviceButton = target.closest("[data-service-section]");
       if (serviceButton) { state.serviceSection = serviceButton.dataset.serviceSection; render(); return; }
       const stepButton = target.closest("[data-step-parameter]");
@@ -1703,6 +1716,7 @@
       return;
     }
     if (state.activeView === "service") { morphChildren(content, serviceHtml()); return; }
+    if (state.activeView === "combustion") { morphChildren(content, combustionHtml()); return; }
     if (!liveParameterViews.has(state.activeView)) return;
     // Mieszacz potrafi chwilowo zniknąć z pojedynczej ramki PyPlumIO podczas
     // odświeżenia/reconnectu. Jeżeli karty są już widoczne, nie zastępujemy ich
@@ -1772,6 +1786,12 @@
         restoreInstallationScroll(scrollPositions);
       });
     }
+    else if (state.activeView === "combustion") {
+      const selected = state.combustionSection;
+      if (selected === "hysteresis") await loadPowerRuntime();
+      if (state.activeView !== "combustion" || state.combustionSection !== selected) return;
+      content.innerHTML = combustionHtml();
+    }
     else if (state.activeView === "service") content.innerHTML = serviceHtml();
     else if (["heating","water_heater","summer","mixer","kindling","supervision","burning_off","cleaning","protections"].includes(state.activeView)) content.innerHTML = sectionHtml(state.activeView);
     else if (filteredViews[state.activeView]) {
@@ -1831,6 +1851,7 @@
   }
 
   function switchView(view) {
+    if (combustionSections.some(([key]) => key === view)) { state.combustionSection = view; view = "combustion"; }
     if (serviceSections.some(([key]) => key === view)) { state.serviceSection = view; view = "service"; }
     if (state.activeView === "work_schedule" && view !== "work_schedule" && !window.PlumBoxWorkSchedule.canLeave()) return;
     state.activeView = view;
@@ -2046,7 +2067,7 @@
         if (websocketStale) restartWebSocket();
         fetchSnapshot();
       }
-      if (state.activeView === "hysteresis") loadPowerRuntime().then(refreshHysteresisSummary);
+      if (isHysteresisView()) loadPowerRuntime().then(refreshHysteresisSummary);
       if (state.activeView === "overview" || state.activeView === "runtime") loadPowerRuntime().then(refreshRuntimeWidgets);
       if (state.activeView === "runtime") loadCycleSummary();
       if (Date.now() - state.authCheckedAt > 30000) {

@@ -1,5 +1,5 @@
 name: "SF11/130 — PlumBox"
-version: "1.0.1"
+version: "1.0.2"
 slug: sf11_130
 description: Panel Lazar SF11/130 i ecoMAX 860P4-LZ, pyplumio 0.7.3, TCP–RS485 lub USB–RS485.
 arch:

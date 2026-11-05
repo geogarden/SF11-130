@@ -35,7 +35,7 @@ function panel(fetchImpl, fastTimers = false) {
     setTimeout:fastTimers ? (fn,ms)=>setTimeout(fn,Math.min(ms,30)) : setTimeout,clearTimeout,setInterval,clearInterval,
   };
   vm.createContext(context);
-  const exported = '  render = async () => {}; drawMainHistoryChart = () => {}; drawOverviewHistoryChart = () => {}; renderOverviewAlarms = () => {}; toast = () => {};\n  globalThis.panel = {state, api, fetchSnapshot, checkAuth, recoverAfterAppResume, updateLockButton, loadInitialDataWithRetry, executeWrite, schemeBurnerState, installationSchemeHtml, hysteresisSummaryHtml, loadPowerRuntime, powerRuntimeHtml, paintLineChart, sectionHtml, overviewHtml, sparklineSvg, appendOverviewTemperatureSample, loadOverviewExtras, editorHtml, historyHtml, chartSeries, loadCycleSummary, hourlyChartTicks, serviceHtml, filteredHtml, overviewDevicesHtml};';
+  const exported = '  render = async () => {}; drawMainHistoryChart = () => {}; drawOverviewHistoryChart = () => {}; renderOverviewAlarms = () => {}; toast = () => {};\n  globalThis.panel = {state, api, fetchSnapshot, checkAuth, recoverAfterAppResume, updateLockButton, loadInitialDataWithRetry, executeWrite, schemeBurnerState, installationSchemeHtml, hysteresisSummaryHtml, loadPowerRuntime, powerRuntimeHtml, paintLineChart, sectionHtml, overviewHtml, sparklineSvg, appendOverviewTemperatureSample, loadOverviewExtras, editorHtml, historyHtml, chartSeries, loadCycleSummary, hourlyChartTicks, serviceHtml, filteredHtml, overviewDevicesHtml, combustionHtml, isHysteresisView};';
   assert(source.includes('  init();'));
   vm.runInContext(source.replace('  init();', exported), context);
   context.panel.state.uiReady=true;
@@ -489,4 +489,18 @@ test('overview restores six live device states beside monthly runtime without gu
  assert(overview.indexOf('URZĄDZENIA / STAN')<overview.indexOf('id="overviewPowerRuntime"'));
  delete p.state.snapshot.values.feeder;assert.equal((p.overviewDevicesHtml().match(/BRAK DANYCH/g)||[]).length,1);
  p.state.snapshot.connected=false;html=p.overviewDevicesHtml();assert.equal((html.match(/BRAK DANYCH/g)||[]).length,6);assert(!html.includes('state-on'));
+});
+
+
+test('combustion shares two settings tabs and refreshes hysteresis only when visible',()=>{
+ const p=panel();p.state.activeView='combustion';p.state.snapshot={values:{heating_target:75},parameters:{h1_hysteresis:{name:'h1_hysteresis',label:'H1',value:5,min:0,max:20,scope:'ecomax',index:0,kind:'number'}}};
+ assert.equal(p.isHysteresisView(),true);
+ let html=p.combustionHtml();assert(html.includes('data-combustion-section="hysteresis" class="active"'));assert(html.includes('id="hysteresisSummary"'));
+ p.state.combustionSection='airflow';assert.equal(p.isHysteresisView(),false);
+ html=p.combustionHtml();assert(html.includes('data-combustion-section="airflow" class="active"'));assert(!html.includes('id="hysteresisSummary"'));
+ const index=fs.readFileSync(path.join(__dirname,'../app/static/index.html'),'utf8');
+ assert.equal((index.match(/data-view="combustion"/g)||[]).length,1);
+ assert(!index.includes('data-view="hysteresis"'));assert(!index.includes('data-view="airflow"'));
+ assert(!index.includes('<div class="nav-group">Serwis</div>'));assert(!index.includes('<div class="nav-group">Spalanie</div>'));
+ assert(index.includes('data-view="service"'));
 });
