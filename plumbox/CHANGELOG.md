@@ -1,3 +1,10 @@
+## 1.0.4
+
+- Zaktualizowano bibliotekę PyPlumIO z 0.7.6 do 0.7.8.
+- Zweryfikowano testy połączeń TCP/USB, harmonogramu i mapowań z zainstalowaną biblioteką 0.7.8.
+- Dostosowano skrypt diagnostyczny połączenia do serial_for_url, również dla IPv6.
+- Ujednolicono wersję dodatku i odświeżono pamięć podręczną WWW.
+
 ## 1.0.3
 
 - Zaktualizowano bibliotekę PyPlumIO z 0.7.3 do 0.7.6.

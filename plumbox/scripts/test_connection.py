@@ -17,7 +17,12 @@ async def main() -> None:
     parser.add_argument("--timeout", type=float, default=60)
     args = parser.parse_args()
 
-    async with pyplumio.open_tcp_connection(args.host, args.port, reconnect_on_failure=False) as connection:
+    host = args.host
+    if ":" in host and not host.startswith("["):
+        host = f"[{host}]"
+    async with pyplumio.serial_for_url(
+        f"socket://{host}:{args.port}", reconnect_on_failure=False
+    ) as connection:
         ecomax = await connection.get("ecomax", timeout=args.timeout)
         print("Połączono.")
         keys = sorted(ecomax.data.keys())
