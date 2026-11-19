@@ -291,7 +291,7 @@ test('overview requests 24 hours of persisted history and removes remote footer'
   assert(p.state.overviewHistory.some(row=>Date.parse(row.ts)<now-12*3600000));
   const html=p.overviewHtml();
   assert(!html.includes('HISTORIA TEMPERATUR · OSTATNIE 24 GODZINY'));
-  assert.equal((html.match(/Ostatnie 12 godzin/g)||[]).length,5);
+  assert.equal((html.match(/Ostatnie 12 godzin/g)||[]).length,6);
   assert(!html.includes('remote-card'));
   assert(!html.includes('DOSTĘP ZDALNY'));
 });
@@ -376,9 +376,11 @@ test('merged overview starts with hydraulic scheme and omits removed widgets',()
  const p=panel();p.state.snapshot={connected:true,values:{heating_temp:67.1,feeder_temp:41,outside_temp:9.8,exhaust_temp:74.6,state_label:'Postój'},mixers:{}};
  const html=p.overviewHtml();
  assert(html.indexOf('data-installation-scheme') < html.indexOf('OBCIĄŻENIE'));
- for(const removed of ['overviewHistoryCanvas','hero-card','>PODAJNIK</div>','scheme-legend','SCHEMAT HYDRAULICZNY · UKŁAD DEKLAROWANY']) assert(!html.includes(removed),removed);
+ for(const removed of ['overviewHistoryCanvas','scheme-legend','SCHEMAT HYDRAULICZNY · UKŁAD DEKLAROWANY']) assert(!html.includes(removed),removed);
  for(const retained of ['67,1','41','9,8','74,6','overviewPowerRuntime','data-open-view="alarms"']) assert(html.includes(retained),retained);
  assert(html.includes('Temp. podajnika'));
+ const cards=html.slice(html.indexOf('class="card hero-card"'),html.indexOf('OBCIĄŻENIE'));
+ for(const expected of ['TEMPERATURA KOTŁA','67,1<small>°C','Postój','>PODAJNIK</div>','41<small>°C','data-spark-key="feeder_temp"']) assert(cards.includes(expected),expected);
 });
 
 

@@ -1,7 +1,7 @@
-const CACHE = "plumbox-gptsol-static-v88";
+const CACHE = "plumbox-gptsol-static-v89";
 // Adresy z parametrem wersji: przegladarka nie moze podac starego pliku
 // z cache HTTP po aktualizacji, bo URL sie zmienia razem z wydaniem.
-const ASSET_VERSION = "gptsol-88";
+const ASSET_VERSION = "gptsol-89";
 const ASSETS = [
   `assets/styles.css?v=${ASSET_VERSION}`,
   `assets/scheme.css?v=${ASSET_VERSION}`,
@@ -9,11 +9,11 @@ const ASSETS = [
   `assets/boiler_views.js?v=${ASSET_VERSION}`,
   `assets/work_schedule.js?v=${ASSET_VERSION}`,
   "assets/icon.svg",
-  "assets/icon.svg?v=gptsol-88",
-  "assets/icon-192.png?v=gptsol-88",
-  "assets/icon-512.png?v=gptsol-88",
-  "assets/apple-touch-icon.png?v=gptsol-88",
-  "manifest.webmanifest?v=gptsol-88",
+  "assets/icon.svg?v=gptsol-89",
+  "assets/icon-192.png?v=gptsol-89",
+  "assets/icon-512.png?v=gptsol-89",
+  "assets/apple-touch-icon.png?v=gptsol-89",
+  "manifest.webmanifest?v=gptsol-89",
   "assets/lazar-logo.svg",
   "assets/boiler.svg",
   "assets/valve-atv.svg",

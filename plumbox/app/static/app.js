@@ -958,7 +958,20 @@
     const hasActiveAlarm = activeAlarmCount !== null && activeAlarmCount > 0;
     return `<div class="dashboard-shell merged-overview"><div class="dashboard-main">
       ${installationSchemeHtml()}
-              <div class="metric-row merged-metrics">
+      <div class="metric-row merged-metrics">
+          <article class="card hero-card">
+            <div class="hero-label">TEMPERATURA KOTŁA</div>
+            <div class="hero-temp">${escapeHtml(fmt(heating))}<small>°C</small></div>
+            <div class="hero-meta">
+              <span>Temperatura zadana: <strong>${escapeHtml(fmt(target))}°C</strong></span>
+              <span>Tryb pracy: <strong class="mode">${escapeHtml(mode)}</strong></span>
+            </div>
+          </article>
+          <article class="card metric-card">
+            <div class="metric-top"><span aria-hidden="true">⚙</span>PODAJNIK</div>
+            <div class="metric-value orange">${escapeHtml(fmt(finiteNumber(val("feeder_temp", null))))}<small>°C</small></div>
+            ${sparkline("feeder_temp", cssColor("--viz-orange", "#ec812e"), 30)}
+          </article>
           <article class="card metric-card"><div class="metric-top"><span>⌁</span>OBCIĄŻENIE</div><div class="metric-value green">${escapeHtml(fmt(boilerLoad, 0))}<small>%</small></div><div class="status-metric-note">Wartość przekazana przez sterownik</div>${sparkline("boiler_load", cssColor("--viz-green", "#34c98e"), 30)}</article>
           <article class="card metric-card"><div class="metric-top"><span>✥</span>WENTYLATOR</div><div class="metric-value blue">${escapeHtml(fmt(val("fan_power"), 0))}<small>%</small></div>${sparkline("fan_power", cssColor("--viz-blue", "#4a8fe8"), 30)}</article>
 

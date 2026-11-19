@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Pod schematem instalacji dodano temperaturę kotła z wartością zadaną i trybem pracy oraz temperaturę podajnika z historią z ostatnich 12 godzin.
+
 ## 1.0.4
 
 - Zaktualizowano bibliotekę PyPlumIO z 0.7.6 do 0.7.8.
