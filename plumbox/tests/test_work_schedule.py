@@ -1,4 +1,4 @@
-"""Use the actual PyPlumIO 0.7.8 decoder/events/encoder, without a boiler."""
+"""Use the actual PyPlumIO 0.7.9 decoder/events/encoder, without a boiler."""
 import asyncio
 from contextlib import asynccontextmanager, suppress
 from types import SimpleNamespace
