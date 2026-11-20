@@ -1,3 +1,7 @@
+## 1.0.9
+
+- Na dużym ekranie kafelki pod schematem zajmują dwa pełne rzędy: pięć u góry i cztery u dołu.
+
 ## 1.0.8
 
 - Przeniesiono odczyty na schemacie, dodano kafelek tlenu obok temperatury kotła i uproszczono oznaczenie palnika.
