@@ -1,3 +1,7 @@
+## 1.0.10
+
+- Aktualizacja biblioteki komunikacyjnej PyPlumIO z 0.7.9 do 0.7.10.
+
 ## 1.0.9
 
 - Na dużym ekranie kafelki pod schematem zajmują dwa pełne rzędy: pięć u góry i cztery u dołu.
