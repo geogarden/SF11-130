@@ -1016,8 +1016,14 @@ td strong { color: var(--text-strong); }
 .merged-overview .scheme-canvas {border-color:var(--overview-orange-border);box-shadow:0 5px 20px #00000020}
 .merged-overview .scheme-status-strip {border-color:var(--overview-orange-border)}
 .merged-overview .metric-top > span {font-size:20px;min-width:23px;line-height:1.1;opacity:1}
-.overview-devices {min-width:0}.overview-devices .device-line {grid-template-columns:34px minmax(0,1fr) auto;min-height:48px}
-.overview-devices .device-state-icon {width:32px;height:32px;font-size:20px}
+.overview-devices { min-width: 0; padding: 14px; }
+.overview-devices .device-line { grid-template-columns: 26px minmax(0,1fr) auto; min-height: 34px; padding: 4px 2px; }
+.overview-devices .device-state-icon { width: 25px; height: 25px; font-size: 16px; }
+.overview-devices .device-line:not(.state-on) .device-state-icon { filter: grayscale(1); color: var(--muted); background: var(--surface-3); }
+@media (min-width: 1181px) {
+  .overview-bottom-row { grid-template-columns: minmax(270px, 1fr) minmax(0, 2fr); }
+}
+#overviewPowerRuntime .runtime-item strong { font-size: clamp(18px, 1.8vw, 32px); }
 .overview-devices .state-pill {white-space:nowrap}
 .side-nav .nav-item > span:first-child {font-size:18px}
 @media(min-width:1025px){.sidebar-collapsed .side-nav .nav-item > span:first-child{font-size:30px;width:34px}}

@@ -929,6 +929,7 @@
   function overviewHtml() {
     const mixer = state.snapshot?.mixers?.["0"]?.values || {};
     const heating = finiteNumber(val("heating_temp", null));
+    const target = effectiveHeatingTarget();
     const oxygen = state.snapshot?.connected ? finiteNumber(val("lambda_level", null)) : null;
     const oxygenText = oxygen === null ? "—" : oxygen.toFixed(1).replace(".", ",");
     const boilerLoad = finiteNumber(val("boiler_load", null));
@@ -951,6 +952,7 @@
           <article class="card hero-card">
             <div class="hero-label">TEMPERATURA KOTŁA</div>
             <div class="hero-temp">${escapeHtml(fmt(heating))}<small>°C</small></div>
+            <div class="status-metric-note">Temperatura zadana: <strong>${target === null ? "—" : escapeHtml(fmt(target)) + "°C"}</strong></div>
           </article>
           <article class="card hero-card">
             <div class="hero-label">TLEN · SONDA LAMBDA</div>

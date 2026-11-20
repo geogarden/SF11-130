@@ -1,3 +1,7 @@
+## 1.0.11
+
+- Mniejsza karta urządzeń z szarymi ikonami w spoczynku, większe miesięczne czasy pracy oraz temperatura zadana w kafelku kotła.
+
 ## 1.0.10
 
 - Aktualizacja biblioteki komunikacyjnej PyPlumIO z 0.7.9 do 0.7.10.
