@@ -1,3 +1,7 @@
+## 1.0.12
+
+- Wyśrodkowano schemat na telefonie, zmieniono podpis na „podajnik” i usunięto górny kafelek pomp.
+
 ## 1.0.11
 
 - Mniejsza karta urządzeń z szarymi ikonami w spoczynku, większe miesięczne czasy pracy oraz temperatura zadana w kafelku kotła.

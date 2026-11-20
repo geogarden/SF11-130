@@ -1014,7 +1014,6 @@ td strong { color: var(--text-strong); }
 .merged-overview {--overview-orange-border:color-mix(in srgb,#ec812e 42%,var(--line));--overview-orange-wash:color-mix(in srgb,#ec812e 12%,transparent)}
 .merged-overview .card:not(.alarm-active) {border:1px solid var(--overview-orange-border);background:radial-gradient(ellipse at 0 0,var(--overview-orange-wash),transparent 64%),var(--surface);box-shadow:0 5px 18px #00000018,inset 0 1px 0 #ffffff04}
 .merged-overview .scheme-canvas {border-color:var(--overview-orange-border);box-shadow:0 5px 20px #00000020}
-.merged-overview .scheme-status-strip {border-color:var(--overview-orange-border)}
 .merged-overview .metric-top > span {font-size:20px;min-width:23px;line-height:1.1;opacity:1}
 .overview-devices { min-width: 0; padding: 14px; }
 .overview-devices .device-line { grid-template-columns: 26px minmax(0,1fr) auto; min-height: 34px; padding: 4px 2px; }
