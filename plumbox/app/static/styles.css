@@ -977,7 +977,11 @@ td strong { color: var(--text-strong); }
 .merged-overview .merged-metrics {grid-template-columns:repeat(4,minmax(0,1fr));margin:0 0 16px;gap:14px}
 .merged-overview #overviewPowerRuntime {width:100%}
 @media(max-width:900px){.merged-overview .merged-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:520px){.merged-overview .merged-metrics{grid-template-columns:1fr}}
+@media(max-width:520px){
+  .merged-metrics > .metric-card {grid-column:1 / -1}
+  .merged-metrics > .hero-card {padding:12px}
+  .merged-metrics .hero-temp {font-size:clamp(26px,8vw,40px)}
+}
 
 /* Zwijane menu na komputerze; na telefonie pozostaje pełna szuflada. */
 .sidebar-toggle {align-self:flex-end;min-width:34px;height:32px;margin-bottom:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--text);font-size:23px;cursor:pointer}
@@ -1022,3 +1026,5 @@ td strong { color: var(--text-strong); }
 @media(min-width:1025px){
   .sidebar-collapsed .side-nav .nav-submenu,.sidebar-collapsed [data-nav-group]::after {display:none}
 }
+
+.hero-temp.oxygen-value small {color:var(--viz-blue)}

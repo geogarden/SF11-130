@@ -152,8 +152,8 @@ test('graphic readouts update from snapshot and preserve missing sensor values',
   let html=p.installationSchemeHtml();
   assert.match(html, /burner-igniting/);
   assert.match(html, /boiler.svg/);
-  assert.match(html, /<b>67<small>°C<\/small><\/b>/);
-  assert.match(html, /Temp. podajnika/);
+  assert.doesNotMatch(html, /scheme-boiler-readout/);
+  assert.doesNotMatch(html, /Temp. podajnika/);
   assert.match(html, /scheme-feed-status active/);
   assert.match(html, /scheme-feeder-gear/);
   p.state.snapshot={connected:true,values:{state_label:'Postój'}};
@@ -199,7 +199,7 @@ test('installation scheme shows live exhaust temperature between weather and boi
   let html=p.installationSchemeHtml();
   assert.match(html, /class="scheme-exhaust" aria-label="Temperatura spalin">SPALINY <b>128,1°C<\/b>/);
   assert(html.indexOf('class="scheme-weather"') < html.indexOf('class="scheme-exhaust"'));
-  assert(html.indexOf('class="scheme-exhaust"') < html.indexOf('class="scheme-controller"'));
+  assert(html.indexOf('class="scheme-exhaust"') < html.indexOf('class="scheme-boiler scheme-boiler-photo"'));
   p.state.snapshot.values.exhaust_temp=91;
   html=p.installationSchemeHtml();assert.match(html, /SPALINY <b>91,0°C/);
   p.state.snapshot.values.exhaust_temp=0;
@@ -378,9 +378,9 @@ test('merged overview starts with hydraulic scheme and omits removed widgets',()
  assert(html.indexOf('data-installation-scheme') < html.indexOf('OBCIĄŻENIE'));
  for(const removed of ['overviewHistoryCanvas','scheme-legend','SCHEMAT HYDRAULICZNY · UKŁAD DEKLAROWANY']) assert(!html.includes(removed),removed);
  for(const retained of ['67,1','41','9,8','74,6','overviewPowerRuntime','data-open-view="alarms"']) assert(html.includes(retained),retained);
- assert(html.includes('Temp. podajnika'));
+ assert(!html.includes('Temp. podajnika'));
  const cards=html.slice(html.indexOf('class="card hero-card"'),html.indexOf('OBCIĄŻENIE'));
- for(const expected of ['TEMPERATURA KOTŁA','67,1<small>°C','Postój','>PODAJNIK</div>','41<small>°C','data-spark-key="feeder_temp"']) assert(cards.includes(expected),expected);
+ for(const expected of ['TEMPERATURA KOTŁA','67,1<small>°C','TLEN · SONDA LAMBDA','>PODAJNIK</div>','41<small>°C','data-spark-key="feeder_temp"']) assert(cards.includes(expected),expected);
 });
 
 
@@ -437,9 +437,9 @@ test('lambda scheme readout follows live oxygen, including zero and missing data
  const p=panel();
  for(const [connected,value,text] of [[true,8.64,'8,6%'],[true,0,'0,0%'],[true,null,'—%'],[false,8.6,'—%']]){
   p.state.snapshot={connected,values:{lambda_level:value}};
-  const html=p.installationSchemeHtml();
-  assert(html.includes('TLEN O₂ <b>'+text+'</b>'));
-  assert(html.indexOf('class="scheme-exhaust"')<html.indexOf('class="scheme-oxygen"'));
+  const html=p.overviewHtml();
+  assert(html.includes('oxygen-value">'+text.replace('%','<small>%</small>')));
+  assert(html.indexOf('TEMPERATURA KOTŁA') < html.indexOf('TLEN · SONDA LAMBDA'));
  }
 });
 

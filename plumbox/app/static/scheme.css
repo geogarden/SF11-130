@@ -91,7 +91,10 @@
 .scheme-weather {
   position: absolute;
   z-index: 10;
-  left: 16px;
+  left: 520px;
+  width: 250px;
+  box-sizing: border-box;
+  text-align: center;
   top: 34px;
   padding: 6px 14px;
   border-radius: 99px;
@@ -111,8 +114,8 @@
 .scheme-exhaust {
   position: absolute;
   z-index: 10;
-  left: 16px;
-  top: 78px;
+  left: 257px;
+  top: 89px;
   width: 158px;
   min-height: 28px;
   display: flex;
@@ -152,9 +155,9 @@
 /* A flow layout keeps readouts together when text wraps or fonts are enlarged. */
 .scheme-boiler-data {
   position: absolute;
-  left: -154px;
-  bottom: 0;
-  width: 158px;
+  left: 109px;
+  bottom: 22px;
+  width: 114px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -189,7 +192,8 @@
 .scheme-boiler-readout {
   position: relative;
   z-index: 4;
-  width: 158px;
+  box-sizing: border-box;
+  width: 100%;
   padding: 10px 12px;
   border: 1px solid #d5dee3;
   border-radius: 10px;
@@ -232,7 +236,8 @@
 .scheme-burner-readout {
   position: relative;
   z-index: 4;
-  width: 158px;
+  box-sizing: border-box;
+  width: 100%;
   padding: 8px 10px;
   border: 1px solid #d5dee3;
   border-radius: 10px;

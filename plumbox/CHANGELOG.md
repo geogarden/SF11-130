@@ -1,3 +1,7 @@
+## 1.0.8
+
+- Przeniesiono odczyty na schemacie, dodano kafelek tlenu obok temperatury kotła i uproszczono oznaczenie palnika.
+
 ## 1.0.7
 
 - Uporządkowano nawigację. Serwis i spalanie mają rozwijane podmenu w panelu bocznym.
