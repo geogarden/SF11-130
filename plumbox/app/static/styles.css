@@ -1013,3 +1013,12 @@ td strong { color: var(--text-strong); }
 .side-nav .nav-item > span:first-child {font-size:18px}
 @media(min-width:1025px){.sidebar-collapsed .side-nav .nav-item > span:first-child{font-size:30px;width:34px}}
 @media(max-width:600px){.overview-devices .device-line{font-size:12px;gap:7px}.overview-devices .state-pill{font-size:9px;padding:4px 7px}}
+
+.side-nav .nav-group, .page-title, .section-head h2 {text-transform:lowercase}
+.nav-submenu:not([hidden]) {display:grid;gap:2px;padding-inline-start:16px}
+.nav-submenu .nav-item {font-size:13px}
+[data-nav-group]::after {content:"▸";margin-inline-start:auto}
+[data-nav-group][aria-expanded="true"]::after {content:"▾"}
+@media(min-width:1025px){
+  .sidebar-collapsed .side-nav .nav-submenu,.sidebar-collapsed [data-nav-group]::after {display:none}
+}

@@ -6,7 +6,7 @@
     catalog: null,
     publicConfig: null,
     activeView: "overview",
-    serviceSection: "fuel_calibration",
+    serviceSection: "kindling",
     combustionSection: "hysteresis",
     powerRuntime48: null,
     token: localStorage.getItem("plumbox_token") || "",
@@ -65,35 +65,35 @@
   appBase.hash = "";
 
   const titles = {
-    communication: "KOMUNIKACJA I MQTT",
-    users: "UŻYTKOWNICY",
-    account: "MOJE KONTO",
-    overview: "PODGLĄD KOTŁA",
-    service: "SERWIS",
-    combustion: "SPALANIE",
-    installation: "SCHEMAT INSTALACJI",
-    heating: "CO I KOCIOŁ",
-    work_schedule: "HARMONOGRAM PRACY KOTŁA",
-    water_heater: "CIEPŁA WODA UŻYTKOWA",
-    summer: "LATO / ZIMA / AUTO",
-    mixer: "MIESZACZ",
-    fuel_calibration: "PRACA",
-    boiler_powers: "MOCE 100/50/30%",
-    hysteresis: "H1 / H2 I HISTEREZA",
-    airflow: "KOREKTY NADMUCHU I PELLETU",
-    kindling: "ROZPALANIE I STABILIZACJA",
-    supervision: "NADZÓR",
-    burning_off: "WYGASZANIE",
-    cleaning: "CZYSZCZENIE",
-    protections: "ZABEZPIECZENIA",
-    alarms: "ALARMY",
-    history: "HISTORIA TEMPERATUR",
-    runtime: "CZASY PRACY",
-    statistics: "STATYSTYKI CYKLI",
-    notifications: "ALERTY NA TELEFON",
-    all: "WSZYSTKIE PARAMETRY",
-    system: "STAN SYSTEMU",
-    audit: "DZIENNIK ZMIAN",
+    communication: "komunikacja i mqtt",
+    users: "użytkownicy",
+    account: "moje konto",
+    overview: "podgląd kotła",
+    service: "serwis",
+    combustion: "spalanie",
+    installation: "schemat instalacji",
+    heating: "kocioł i co",
+    work_schedule: "harmonogram pracy",
+    water_heater: "ciepła woda",
+    summer: "lato / zima / auto",
+    mixer: "mieszacz",
+    fuel_calibration: "paliwo i nadmuch",
+    boiler_powers: "moce 100/50/30%",
+    hysteresis: "h1/h2 i histereza",
+    airflow: "korekty nadmuchu i pelletu",
+    kindling: "rozpalanie",
+    supervision: "nadzór",
+    burning_off: "wygaszanie",
+    cleaning: "czyszczenie",
+    protections: "zabezpieczenia",
+    alarms: "alarmy",
+    history: "historia temperatur",
+    runtime: "czasy pracy",
+    statistics: "statystyki cykli",
+    notifications: "alerty na telefon",
+    all: "wszystkie parametry",
+    system: "stan systemu",
+    audit: "dziennik zmian",
   };
 
   const filteredViews = {
@@ -1018,19 +1018,17 @@
     return `<article class="parameter-card" data-risk="${escapeHtml(parameter.risk)}" data-access="${escapeHtml(parameter.access || "service")}" data-param-scope="${escapeHtml(parameter.scope)}" data-param-index="${escapeHtml(parameter.index)}" data-param-name="${escapeHtml(parameter.name)}"><div class="parameter-top"><div class="parameter-title">${escapeHtml(parameter.label)}</div><span class="risk-tag ${escapeHtml(badgeClass)}">${badge}</span></div><div class="parameter-current">${escapeHtml(parameterValueLabel(parameter))}</div><div class="range-note">${escapeHtml(parameterRangeLabel(parameter))}</div>${editorHtml(parameter)}</article>`;
   }
 
-  const combustionSections = [["hysteresis","H1/H2 i histereza"],["airflow","Korekty nadmuchu i pelletu"]];
   function isHysteresisView() {
     return state.activeView === "hysteresis" || (state.activeView === "combustion" && state.combustionSection === "hysteresis");
   }
   function combustionHtml() {
     const selected = state.combustionSection;
-    return `<div class="service-tabs combustion-tabs" role="group" aria-label="Sekcje spalania">${combustionSections.map(([key,label]) => `<button data-combustion-section="${key}" class="${selected === key ? "active" : ""}" aria-pressed="${selected === key}">${label}</button>`).join("")}</div>` + filteredHtml(selected);
+    return filteredHtml(selected);
   }
 
-  const serviceSections = [["fuel_calibration","PRACA"],["kindling","Rozpalanie"],["supervision","Nadzór"],["burning_off","Wygaszanie"],["cleaning","Czyszczenie"],["protections","Zabezpieczenia"]];
   function serviceHtml() {
     const selected = state.serviceSection;
-    return `<div class="service-tabs" role="group" aria-label="Sekcje serwisowe">${serviceSections.map(([key,label]) => `<button data-service-section="${key}" class="${selected === key ? "active" : ""}" aria-pressed="${selected === key}">${label}</button>`).join("")}</div>` + (filteredViews[selected] ? filteredHtml(selected) : sectionHtml(selected));
+    return (filteredViews[selected] ? filteredHtml(selected) : sectionHtml(selected));
   }
 
   function sectionHtml(section, parameters = null, intro = "") {
@@ -1198,10 +1196,6 @@
       const target = event.target instanceof Element ? event.target : event.target?.parentElement;
       if (!target) return;
 
-      const combustionButton = target.closest("[data-combustion-section]");
-      if (combustionButton) { state.combustionSection = combustionButton.dataset.combustionSection; render(); return; }
-      const serviceButton = target.closest("[data-service-section]");
-      if (serviceButton) { state.serviceSection = serviceButton.dataset.serviceSection; render(); return; }
       const stepButton = target.closest("[data-step-parameter]");
       if (stepButton && content.contains(stepButton)) {
         const input = $(`input-${stepButton.dataset.stepParameter}`);
@@ -1755,7 +1749,7 @@
     if (state.activeView === "statistics") state.activeView = "runtime";
     if (!state.snapshot) { content.innerHTML = `<div class="loading-card">Oczekiwanie na dane…</div>`; return; }
     setConnectionUi();
-    $("viewTitle").textContent = titles[state.activeView] || "PLUMBOX";
+    $("viewTitle").textContent = titles[selectedNavView()] || "plumbox";
     if (state.activeView === "work_schedule") {
       await window.PlumBoxWorkSchedule.mount({
         content, api, toast, checkAuth, unlock: showUnlock,
@@ -1863,12 +1857,35 @@
     } catch { /* inna domena — nie dotyczy stron PlumBox */ }
   }
 
+  function selectedNavView() {
+    if (state.activeView === "service") return state.serviceSection;
+    if (state.activeView === "combustion") return state.combustionSection;
+    return state.activeView;
+  }
+
+  function setGroupExpanded(button, expanded) {
+    button.setAttribute("aria-expanded", String(expanded));
+    $(button.getAttribute("aria-controls")).hidden = !expanded;
+  }
+
   function switchView(view) {
-    if (combustionSections.some(([key]) => key === view)) { state.combustionSection = view; view = "combustion"; }
-    if (serviceSections.some(([key]) => key === view)) { state.serviceSection = view; view = "service"; }
     if (state.activeView === "work_schedule" && view !== "work_schedule" && !window.PlumBoxWorkSchedule.canLeave()) return;
+    const child = document.querySelector(`.nav-submenu [data-view="${CSS.escape(view)}"]`);
+    const group = child?.parentElement.id;
+    if (group === "nav-service") { state.serviceSection = view; view = "service"; }
+    if (group === "nav-combustion") { state.combustionSection = view; view = "combustion"; }
     state.activeView = view;
-    document.querySelectorAll("[data-view]").forEach((button) => button.classList.toggle("active", button.dataset.view === view));
+    document.querySelectorAll("[data-nav-group]").forEach(button => {
+      const active = button.dataset.navGroup === view;
+      button.classList.toggle("active", active);
+      if (active) setGroupExpanded(button, true);
+    });
+    document.querySelectorAll("[data-view]").forEach(button => {
+      const active = button.dataset.view === selectedNavView();
+      button.classList.toggle("active", active);
+      if (active) button.setAttribute("aria-current", "page");
+      else button.removeAttribute("aria-current");
+    });
     $("sidebar").classList.remove("open");
     window.scrollTo({ top:0, behavior:"smooth" });
     render();
@@ -2012,13 +2029,20 @@
     const apply = collapsed => {
       shell.classList.toggle("sidebar-collapsed", collapsed);
       toggle.setAttribute("aria-expanded", String(!collapsed));
-      toggle.setAttribute("aria-label", collapsed ? "Rozwiń panel boczny" : "Zwiń panel boczny");
-      toggle.title = collapsed ? "Rozwiń panel boczny" : "Zwiń panel boczny";
+      toggle.setAttribute("aria-label", collapsed ? "rozwiń panel boczny" : "zwiń panel boczny");
+      toggle.title = collapsed ? "rozwiń panel boczny" : "zwiń panel boczny";
       toggle.textContent = collapsed ? "»" : "«";
     };
     let collapsed = false;
     try { collapsed = localStorage.getItem("plumbox-sidebar-collapsed") === "1"; } catch (_) {}
     apply(collapsed);
+    document.querySelectorAll("[data-nav-group]").forEach(button => {
+      button.addEventListener("click", () => {
+        const iconsOnly = collapsed && window.matchMedia("(min-width:1025px)").matches;
+        if (iconsOnly) toggle.click();
+        setGroupExpanded(button, iconsOnly || button.getAttribute("aria-expanded") !== "true");
+      });
+    });
     toggle.addEventListener("click", () => {
       collapsed = !collapsed; apply(collapsed);
       try { localStorage.setItem("plumbox-sidebar-collapsed", collapsed ? "1" : "0"); } catch (_) {}

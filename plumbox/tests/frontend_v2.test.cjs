@@ -449,25 +449,23 @@ test('sidebar collapse restores saved preference and keeps accessible labels',()
  const shell={classList:{toggle:(_,v)=>collapsed=v}};
  const code=source.slice(source.indexOf('  function initSidebarCollapse()'),source.indexOf('  async function init()'));
  vm.runInNewContext(code+';initSidebarCollapse();',{
-  document:{querySelector:()=>shell},$:()=>button,
+  document:{querySelector:()=>shell,querySelectorAll:()=>[]},$:()=>button,
   localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v)},
   window:{dispatchEvent:()=>resizes++},Event:class{}
  });
  assert.equal(collapsed,true);assert.equal(attrs['aria-expanded'],'false');assert.equal(button.textContent,'»');
  click();assert.equal(collapsed,false);assert.equal(attrs['aria-expanded'],'true');assert.equal(store.get('plumbox-sidebar-collapsed'),'0');assert.equal(resizes,1);
  const html=fs.readFileSync(path.join(__dirname,'../app/static/index.html'),'utf8');
- assert(html.includes('id="sidebarToggle"'));assert(html.includes('title="Historia temperatur" aria-label="Historia temperatur"'));
+ assert(html.includes('id="sidebarToggle"'));assert(html.includes('title="historia temperatur" aria-label="historia temperatur"'));
 });
 
 
-test('service tabs group all six sections behind a single sidebar entry',()=>{
- const p=panel();
- for(const key of ['fuel_calibration','kindling','supervision','burning_off','cleaning','protections']){
-  p.state.serviceSection=key;assert(p.serviceHtml().includes('data-service-section="'+key+'" class="active"'));
- }
+test('service sidebar contains all six stages in operational order',()=>{
  const html=fs.readFileSync(path.join(__dirname,'../app/static/index.html'),'utf8');
- assert.equal((html.match(/data-view="service"/g)||[]).length,1);assert(!html.includes('data-view="audit"'));
- for(const key of ['fuel_calibration','kindling','supervision','burning_off','cleaning','protections'])assert(!html.includes('data-view="'+key+'"'));
+ const block=html.split('id="nav-service"')[1].split('</div>')[0];
+ assert.deepEqual([...block.matchAll(/data-view="([^"]+)"/g)].map(match=>match[1]),
+   ['kindling','fuel_calibration','supervision','burning_off','cleaning','protections']);
+ assert(!panel().serviceHtml().includes('service-tabs'));
  assert(html.includes('src="assets/icon.svg" alt="HKS"'));
 });
 
@@ -494,15 +492,15 @@ test('overview restores six live device states beside monthly runtime without gu
 });
 
 
-test('combustion shares two settings tabs and refreshes hysteresis only when visible',()=>{
+test('combustion has two sidebar entries and refreshes hysteresis only when visible',()=>{
  const p=panel();p.state.activeView='combustion';p.state.snapshot={values:{heating_target:75},parameters:{h1_hysteresis:{name:'h1_hysteresis',label:'H1',value:5,min:0,max:20,scope:'ecomax',index:0,kind:'number'}}};
  assert.equal(p.isHysteresisView(),true);
- let html=p.combustionHtml();assert(html.includes('data-combustion-section="hysteresis" class="active"'));assert(html.includes('id="hysteresisSummary"'));
+ let html=p.combustionHtml();assert(html.includes('id="hysteresisSummary"'));
  p.state.combustionSection='airflow';assert.equal(p.isHysteresisView(),false);
- html=p.combustionHtml();assert(html.includes('data-combustion-section="airflow" class="active"'));assert(!html.includes('id="hysteresisSummary"'));
+ html=p.combustionHtml();assert(!html.includes('id="hysteresisSummary"'));
  const index=fs.readFileSync(path.join(__dirname,'../app/static/index.html'),'utf8');
- assert.equal((index.match(/data-view="combustion"/g)||[]).length,1);
- assert(!index.includes('data-view="hysteresis"'));assert(!index.includes('data-view="airflow"'));
+ assert.equal((index.match(/data-nav-group="combustion"/g)||[]).length,1);
+ assert(index.includes('data-view="hysteresis"'));assert(index.includes('data-view="airflow"'));
  assert(!index.includes('<div class="nav-group">Serwis</div>'));assert(!index.includes('<div class="nav-group">Spalanie</div>'));
- assert(index.includes('data-view="service"'));
+ assert(index.includes('data-nav-group="service"'));
 });

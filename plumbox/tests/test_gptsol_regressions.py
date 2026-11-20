@@ -1555,10 +1555,10 @@ def test_service_work_view_contains_all_four_econet_parameters_in_order():
 
     expected = 'fuel_calibration: ["min_fan_power", "max_fuel_flow", "fuel_calorific_value", "fuel_detection_time"]'
     assert expected in js
-    assert 'fuel_calibration: "PRACA"' in js
-    assert 'data-view="service"' in html
-    assert '["fuel_calibration","PRACA"]' in js
-    assert html.count('data-view="service"') == 1
+    assert 'fuel_calibration: "paliwo i nadmuch"' in js
+    assert 'data-nav-group="service"' in html
+    assert 'data-view="fuel_calibration" title="paliwo i nadmuch"' in html
+    assert html.count('data-nav-group="service"') == 1
     assert '<div class="nav-group">Serwis</div>' not in html
     assert "function userFirst(parameters)" in js
 

@@ -1,3 +1,7 @@
+## 1.0.7
+
+- Uporządkowano nawigację. Serwis i spalanie mają rozwijane podmenu w panelu bocznym.
+
 ## 1.0.6
 
 - Aktualizacja biblioteki komunikacyjnej PyPlumIO z 0.7.8 do 0.7.9.
