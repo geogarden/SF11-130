@@ -160,7 +160,7 @@ test('graphic readouts update from snapshot and preserve missing sensor values',
   html=p.installationSchemeHtml();
   assert.match(html, /burner-idle/);
   assert.match(html, /aria-label="Brak odczytu podajnika"/);
-  assert.doesNotMatch(html, /67|29/);
+  assert.doesNotMatch(html.replace(/<[^>]*>/g, ""), /67|29/);
 });
 
 

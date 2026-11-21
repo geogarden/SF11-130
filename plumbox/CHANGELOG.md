@@ -1,3 +1,9 @@
+## 1.0.15
+
+- Umieszczono temperaturę zewnętrzną w półprzezroczystej chmurze wyrównanej z termostatem i grzejnikiem.
+- Podpis obiegu znajduje się nad grzejnikiem, a odczyt i temperatura zadana po jego prawej stronie.
+- Przyciemniono tło temperatury spalin i zwiększono tekst stanu pomp do 16 pkt.
+
 ## 1.0.14
 
 - Powiększono temperatury kotła, zewnętrzną i CWU o 2 pkt na schemacie.

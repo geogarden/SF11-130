@@ -816,7 +816,7 @@
       <div class="scheme-canvas">
         <div class="scheme-plant">
           <div class="scheme-equipment">
-          <div class="scheme-weather"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6.5 18.5a4.5 4.5 0 0 1-.55-8.97 6.1 6.1 0 0 1 11.8-.95 5 5 0 0 1 .25 9.92Z"/></svg><span>temperatura zewnętrzna</span> <b>${outsideTemp === null ? "—" : outsideTemp.toFixed(1).replace(".", ",")}°C</b></div>
+          <div class="scheme-weather"><svg viewBox="0 0 210 100" aria-hidden="true"><path d="M37 93C-1 93-6 45 29 41C34 16 57 10 76 19C92-6 137-4 150 24C171 14 192 29 191 48C218 57 212 93 184 93Z" fill="rgba(135,206,250,0.2)" stroke="#86b7d6" stroke-width="2"/></svg><span>temp. zewnętrzna</span> <b>${outsideTemp === null ? "—" : outsideTemp.toFixed(1).replace(".", ",")}°C</b></div>
           <div class="scheme-exhaust" aria-label="Temperatura spalin">SPALINY <b>${escapeHtml(exhaustText)}°C</b></div>
           <div class="scheme-thermostat"><span>TERMOSTAT</span><b>${escapeHtml(thermostatText)}</b></div>
 
