@@ -977,11 +977,26 @@ td strong { color: var(--text-strong); }
 .merged-overview, .merged-overview .dashboard-main { min-width: 0; }
 .merged-overview #overviewPowerRuntime { width: 100%; }
 .merged-overview .merged-metrics {
-  grid-template-columns: repeat(6, minmax(170px, 1fr));
+  grid-template-columns: repeat(5, minmax(170px, 1fr)) minmax(120px, .65fr);
   overflow-x: auto;
   gap: 10px;
   margin-bottom: 16px;
 }
+.boiler-phase {
+  --phase-color: var(--muted);
+  display:inline-flex; align-items:center; gap:6px; padding:4px 9px;
+  border:1px solid var(--phase-color); border-radius:999px;
+  font-size:13px; color:var(--text); line-height:1.2;
+}
+.boiler-phase[hidden] {display:none}
+.boiler-phase::before {content:""; width:7px; height:7px; flex:none; border-radius:50%; background:var(--phase-color)}
+.boiler-phase[data-phase="Praca"] {--phase-color:var(--viz-green)}
+.boiler-phase[data-phase="Rozpalanie"] {--phase-color:var(--viz-orange)}
+.boiler-phase[data-phase="Wygaszanie"] {--phase-color:var(--viz-amber)}
+.boiler-phase[data-phase="Nadzór"] {--phase-color:var(--viz-blue)}
+.boiler-phase[data-phase="Czyszczenie"] {--phase-color:#a479db}
+.boiler-phase[data-phase="Alarm"] {--phase-color:var(--viz-red)}
+@media(max-width:760px){.topbar-left {flex-wrap:wrap}}
 .merged-metrics > * { min-width: 0; }
 .merged-metrics .centered-reading {
   display:grid; grid-template-rows:1fr auto 1fr; justify-items:center;

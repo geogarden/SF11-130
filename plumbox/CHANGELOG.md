@@ -1,3 +1,7 @@
+## 1.0.18
+
+- Obok tytułu podglądu wyświetlany jest bieżący tryb kotła. Zwężono kafelek aktywnych alarmów i wyśrodkowano licznik.
+
 ## 1.0.17
 
 - Pod schematem umieszczono sześć kafelków w jednym przewijanym rzędzie. Powiększono i wyśrodkowano temperaturę kotła, tlen i poziom paliwa. Wykresy pozostały przy obciążeniu i wentylatorze.

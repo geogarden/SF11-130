@@ -323,7 +323,17 @@
     applyTheme(saved || preferred);
   }
 
+  function updateBoilerPhase() {
+    const badge = $("boilerPhase");
+    badge.hidden = state.activeView !== "overview";
+    const phase = state.snapshot?.connected ? val("state_label", null) : null;
+    const text = "Tryb: " + (phase || "brak danych");
+    if (badge.textContent !== text) badge.textContent = text;
+    badge.setAttribute("data-phase", phase || "");
+  }
+
   function setConnectionUi() {
+    updateBoilerPhase();
     const connected = Boolean(state.snapshot?.connected);
     const simulated = Boolean(state.snapshot?.simulation);
     const badge = $("connectionBadge");
@@ -972,7 +982,7 @@
             <div class="hero-temp oxygen-value">${oxygenText}<small>%</small></div>
           </article>
           <article class="card metric-card centered-reading"><div class="metric-top"><span>▧</span>POZIOM PALIWA</div><div class="metric-value green">${escapeHtml(fmt(fuelLevel, 0))}<small>%</small></div></article>
-          <button type="button" class="card metric-card metric-action-card${hasActiveAlarm ? " alarm-active" : ""}" data-open-view="alarms"><div class="metric-top"><span>${hasActiveAlarm ? "⚠" : "✓"}</span>ALARMY AKTYWNE</div><div class="metric-value ${hasActiveAlarm ? "red" : "green"}">${escapeHtml(fmt(activeAlarmCount, 0))}</div><div class="status-metric-note">Kliknij, aby otworzyć alarmy</div></button>
+          <button type="button" class="card metric-card centered-reading metric-action-card${hasActiveAlarm ? " alarm-active" : ""}" data-open-view="alarms"><div class="metric-top"><span>${hasActiveAlarm ? "⚠" : "✓"}</span>ALARMY AKTYWNE</div><div class="metric-value ${hasActiveAlarm ? "red" : "green"}">${escapeHtml(fmt(activeAlarmCount, 0))}</div><div class="status-metric-note">Kliknij, aby otworzyć alarmy</div></button>
         </div>
 
 

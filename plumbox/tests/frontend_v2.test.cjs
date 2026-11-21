@@ -35,7 +35,7 @@ function panel(fetchImpl, fastTimers = false) {
     setTimeout:fastTimers ? (fn,ms)=>setTimeout(fn,Math.min(ms,30)) : setTimeout,clearTimeout,setInterval,clearInterval,
   };
   vm.createContext(context);
-  const exported = '  render = async () => {}; drawMainHistoryChart = () => {}; drawOverviewHistoryChart = () => {}; renderOverviewAlarms = () => {}; toast = () => {};\n  globalThis.panel = {state, api, fetchSnapshot, checkAuth, recoverAfterAppResume, updateLockButton, loadInitialDataWithRetry, executeWrite, schemeBurnerState, installationSchemeHtml, hysteresisSummaryHtml, loadPowerRuntime, powerRuntimeHtml, paintLineChart, sectionHtml, overviewHtml, sparklineSvg, appendOverviewTemperatureSample, loadOverviewExtras, editorHtml, historyHtml, chartSeries, loadCycleSummary, hourlyChartTicks, serviceHtml, filteredHtml, overviewDevicesHtml, combustionHtml, isHysteresisView};';
+  const exported = '  render = async () => {}; drawMainHistoryChart = () => {}; drawOverviewHistoryChart = () => {}; renderOverviewAlarms = () => {}; toast = () => {};\n  globalThis.panel = {state, updateBoilerPhase, api, fetchSnapshot, checkAuth, recoverAfterAppResume, updateLockButton, loadInitialDataWithRetry, executeWrite, schemeBurnerState, installationSchemeHtml, hysteresisSummaryHtml, loadPowerRuntime, powerRuntimeHtml, paintLineChart, sectionHtml, overviewHtml, sparklineSvg, appendOverviewTemperatureSample, loadOverviewExtras, editorHtml, historyHtml, chartSeries, loadCycleSummary, hourlyChartTicks, serviceHtml, filteredHtml, overviewDevicesHtml, combustionHtml, isHysteresisView};';
   assert(source.includes('  init();'));
   vm.runInContext(source.replace('  init();', exported), context);
   context.panel.state.uiReady=true;
@@ -383,7 +383,7 @@ test('merged overview starts with hydraulic scheme and omits removed widgets',()
  assert.deepEqual([...cards.matchAll(/class="(?:hero-label|metric-top)">(?:<span>.*?<\/span>)?([^<]+)/g)].map(m=>m[1]),
    ['TEMPERATURA KOTŁA','OBCIĄŻENIE','WENTYLATOR','TLEN · SONDA LAMBDA','POZIOM PALIWA','ALARMY AKTYWNE']);
  assert.deepEqual([...cards.matchAll(/data-spark-key="([^"]+)"/g)].map(m=>m[1]), ['boiler_load','fan_power']);
- assert.equal((cards.match(/centered-reading/g)||[]).length,3);
+ assert.equal((cards.match(/centered-reading/g)||[]).length,4);
 });
 
 
@@ -517,4 +517,22 @@ test('weather cloud follows the sensor, interpolates and clamps the palette', ()
     p.state.snapshot = { connected: true, values: { outside_temp: temperature } };
     assert.ok(p.installationSchemeHtml().includes(`fill="${color}" fill-opacity="0.2" stroke="${color}"`));
   }
+});
+
+test('overview phase follows the controller and clears on disconnect', () => {
+  const p = panel();
+  p.state.activeView = 'overview';
+  const badge = p.element('boilerPhase');
+  for (const label of ['Rozpalanie', 'Praca', 'Wygaszanie', 'Postój']) {
+    p.state.snapshot = {connected:true, values:{state_label:label}};
+    p.updateBoilerPhase();
+    assert.equal(badge.textContent, 'Tryb: ' + label);
+    assert.equal(badge.hidden, false);
+  }
+  p.state.snapshot.connected = false;
+  p.updateBoilerPhase();
+  assert.equal(badge.textContent, 'Tryb: brak danych');
+  p.state.activeView = 'alarms';
+  p.updateBoilerPhase();
+  assert.equal(badge.hidden, true);
 });
