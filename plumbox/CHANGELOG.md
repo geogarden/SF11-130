@@ -1,3 +1,7 @@
+## 1.0.16
+
+- Kolor chmury zmienia się wraz z temperaturą zewnętrzną według palety odwzorowanej z mapy IMGW. Wypełnienie zachowuje 80% przezroczystości.
+
 ## 1.0.15
 
 - Umieszczono temperaturę zewnętrzną w półprzezroczystej chmurze wyrównanej z termostatem i grzejnikiem.

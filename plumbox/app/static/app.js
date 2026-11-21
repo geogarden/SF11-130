@@ -767,6 +767,28 @@
     return { phase: "idle", label: String(mode || "Brak odczytu") };
   }
 
+  // Barwy z podglądu mapy temperatury IMGW na 2 m, od -40 do +45°C co 5°C.
+  const outsideTemperatureColors = [
+    [240, 240, 240], [98, 98, 98], [72, 34, 43],
+    [112, 50, 70], [70, 20, 83], [57, 60, 145],
+    [129, 112, 221], [231, 161, 234], [158, 162, 155],
+    [56, 133, 66], [108, 174, 84], [181, 214, 120],
+    [255, 241, 141], [255, 174, 56], [237, 74, 23],
+    [157, 25, 38], [244, 175, 234], [250, 246, 250]
+  ];
+
+  function weatherCloudColor(temperature) {
+    if (temperature === null) return "var(--muted)";
+    const last = outsideTemperatureColors.length - 1;
+    const position = Math.max(0, Math.min(last, (temperature + 40) / 5));
+    const index = Math.floor(position);
+    const start = outsideTemperatureColors[index];
+    const end = outsideTemperatureColors[Math.min(index + 1, last)];
+    const fraction = position - index;
+    const rgb = start.map((channel, i) => Math.round(channel + (end[i] - channel) * fraction));
+    return `rgb(${rgb.join(",")})`;
+  }
+
   function installationSchemeHtml() {
     const mixer = state.snapshot?.mixers?.["0"]?.values || {};
     const mode = String(val("state_label", "Nieznany"));
@@ -777,6 +799,7 @@
     const mixerTarget = finiteNumber(mixer.target_temp)
       ?? finiteNumber(parameterValue("mixer_target_temp", null, "mixer", 0));
     const outsideTemp = finiteNumber(firstSnapshotValue(["outside_temp", "external_temp", "weather_temp"]));
+    const cloudColor = weatherCloudColor(outsideTemp);
     const exhaustTemp = finiteNumber(val("exhaust_temp", null));
     const exhaustText = exhaustTemp === null ? "—" : exhaustTemp.toFixed(1).replace(".", ",");
 
@@ -816,7 +839,7 @@
       <div class="scheme-canvas">
         <div class="scheme-plant">
           <div class="scheme-equipment">
-          <div class="scheme-weather"><svg viewBox="0 0 210 100" aria-hidden="true"><path d="M37 93C-1 93-6 45 29 41C34 16 57 10 76 19C92-6 137-4 150 24C171 14 192 29 191 48C218 57 212 93 184 93Z" fill="rgba(135,206,250,0.2)" stroke="#86b7d6" stroke-width="2"/></svg><span>temp. zewnętrzna</span> <b>${outsideTemp === null ? "—" : outsideTemp.toFixed(1).replace(".", ",")}°C</b></div>
+          <div class="scheme-weather"><svg viewBox="0 0 210 100" aria-hidden="true"><path d="M37 93C-1 93-6 45 29 41C34 16 57 10 76 19C92-6 137-4 150 24C171 14 192 29 191 48C218 57 212 93 184 93Z" fill="${cloudColor}" fill-opacity="0.2" stroke="${cloudColor}" stroke-width="2"/></svg><span>temp. zewnętrzna</span> <b>${outsideTemp === null ? "—" : outsideTemp.toFixed(1).replace(".", ",")}°C</b></div>
           <div class="scheme-exhaust" aria-label="Temperatura spalin">SPALINY <b>${escapeHtml(exhaustText)}°C</b></div>
           <div class="scheme-thermostat"><span>TERMOSTAT</span><b>${escapeHtml(thermostatText)}</b></div>
 

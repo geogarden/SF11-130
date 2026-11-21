@@ -504,3 +504,14 @@ test('combustion has two sidebar entries and refreshes hysteresis only when visi
  assert(!index.includes('<div class="nav-group">Serwis</div>'));assert(!index.includes('<div class="nav-group">Spalanie</div>'));
  assert(index.includes('data-nav-group="service"'));
 });
+
+test('weather cloud follows the sensor, interpolates and clamps the palette', () => {
+  const p = panel();
+  for (const [temperature, color] of [
+    [-50, 'rgb(240,240,240)'], [0, 'rgb(158,162,155)'], [2.5, 'rgb(107,148,111)'],
+    [50, 'rgb(250,246,250)'], [null, 'var(--muted)'], ['unavailable', 'var(--muted)'],
+  ]) {
+    p.state.snapshot = { connected: true, values: { outside_temp: temperature } };
+    assert.ok(p.installationSchemeHtml().includes(`fill="${color}" fill-opacity="0.2" stroke="${color}"`));
+  }
+});
