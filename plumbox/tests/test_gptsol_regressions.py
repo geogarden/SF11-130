@@ -784,7 +784,7 @@ def test_gptsol10_dashboard_has_requested_metric_order_and_full_width_chart(clie
     overview = app_js.split("function overviewHtml()", 1)[1].split("function parametersForSection", 1)[0]
     assert '${installationSchemeHtml()}' in overview
     assert overview.index('${installationSchemeHtml()}') < overview.index('OBCIĄŻENIE')
-    for marker in ["TEMPERATURA KOTŁA", ">PODAJNIK</div>", "OBCIĄŻENIE", "WENTYLATOR", "MIESZACZ", "CWU", "POZIOM PALIWA", "ALARMY AKTYWNE"]:
+    for marker in ["TEMPERATURA KOTŁA", "OBCIĄŻENIE", "WENTYLATOR", "TLEN · SONDA LAMBDA", "POZIOM PALIWA", "ALARMY AKTYWNE"]:
         assert marker in overview
     for marker in ["URZĄDZENIA / STAN", "overviewHistoryCanvas"]:
         assert marker not in overview

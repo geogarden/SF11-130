@@ -10,8 +10,8 @@ def test_installation_scheme_is_registered_as_a_native_view():
 
     assert 'data-view="installation"' not in index
     assert 'data-view="overview"' in index
-    assert 'scheme.css?v=gptsol-99' in index
-    assert 'app.js?v=gptsol-99' in index
+    assert 'scheme.css?v=gptsol-100' in index
+    assert 'app.js?v=gptsol-100' in index
     assert 'installation: "schemat instalacji"' in script
     assert "installationSchemeHtml" in script
     assert "UKŁAD DEKLAROWANY" not in script
@@ -36,7 +36,7 @@ def test_scheme_uses_controller_snapshot_instead_of_demo_modes():
     assert 'assets/mixer-valve.svg' in script
     assert 'assets/valve-atv.svg' in script
     assert '<b>×</b>' not in script
-    assert 'sparkline("feeder_temp"' in script
+    assert 'sparkline("feeder_temp"' not in script
 
     assert "data-mode=" not in script
     assert "Postój · podgląd koncepcyjny" not in script

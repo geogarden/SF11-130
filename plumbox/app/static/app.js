@@ -943,16 +943,11 @@
   }
 
   function overviewHtml() {
-    const mixer = state.snapshot?.mixers?.["0"]?.values || {};
     const heating = finiteNumber(val("heating_temp", null));
     const target = effectiveHeatingTarget();
     const oxygen = state.snapshot?.connected ? finiteNumber(val("lambda_level", null)) : null;
     const oxygenText = oxygen === null ? "—" : oxygen.toFixed(1).replace(".", ",");
     const boilerLoad = finiteNumber(val("boiler_load", null));
-    const cwu = finiteNumber(val("water_heater_temp", null));
-    const cwuTarget = finiteNumber(val("water_heater_target", null)) ?? finiteNumber(parameterValue("water_heater_target_temp", null));
-    const mixerTemp = finiteNumber(mixer.current_temp);
-    const mixerTarget = finiteNumber(mixer.target_temp) ?? finiteNumber(parameterValue("mixer_target_temp", null, "mixer", 0));
     const fuelLevel = finiteNumber(val("fuel_level", null));
     const currentAlerts = Array.isArray(state.snapshot?.alerts) ? state.snapshot.alerts : [];
     const activeSnapshotAlerts = currentAlerts.filter((alarm) => alarm?.active).length;
@@ -965,26 +960,18 @@
     return `<div class="dashboard-shell merged-overview"><div class="dashboard-main">
       ${installationSchemeHtml()}
       <div class="metric-row merged-metrics">
-          <article class="card hero-card">
+          <article class="card hero-card centered-reading">
             <div class="hero-label">TEMPERATURA KOTŁA</div>
             <div class="hero-temp">${escapeHtml(fmt(heating))}<small>°C</small></div>
             <div class="status-metric-note">Temperatura zadana: <strong>${target === null ? "—" : escapeHtml(fmt(target)) + "°C"}</strong></div>
           </article>
-          <article class="card hero-card">
+          <article class="card metric-card"><div class="metric-top"><span>⌁</span>OBCIĄŻENIE</div><div class="metric-value green">${escapeHtml(fmt(boilerLoad, 0))}<small>%</small></div><div class="status-metric-note">Wartość przekazana przez sterownik</div>${sparkline("boiler_load", cssColor("--viz-green", "#34c98e"), 30)}</article>
+          <article class="card metric-card"><div class="metric-top"><span>✥</span>WENTYLATOR</div><div class="metric-value blue">${escapeHtml(fmt(val("fan_power"), 0))}<small>%</small></div>${sparkline("fan_power", cssColor("--viz-blue", "#4a8fe8"), 30)}</article>
+          <article class="card hero-card centered-reading">
             <div class="hero-label">TLEN · SONDA LAMBDA</div>
             <div class="hero-temp oxygen-value">${oxygenText}<small>%</small></div>
           </article>
-          <article class="card metric-card">
-            <div class="metric-top"><span aria-hidden="true">⚙</span>PODAJNIK</div>
-            <div class="metric-value orange">${escapeHtml(fmt(finiteNumber(val("feeder_temp", null))))}<small>°C</small></div>
-            ${sparkline("feeder_temp", cssColor("--viz-orange", "#ec812e"), 30)}
-          </article>
-          <article class="card metric-card"><div class="metric-top"><span>⌁</span>OBCIĄŻENIE</div><div class="metric-value green">${escapeHtml(fmt(boilerLoad, 0))}<small>%</small></div><div class="status-metric-note">Wartość przekazana przez sterownik</div>${sparkline("boiler_load", cssColor("--viz-green", "#34c98e"), 30)}</article>
-          <article class="card metric-card"><div class="metric-top"><span>✥</span>WENTYLATOR</div><div class="metric-value blue">${escapeHtml(fmt(val("fan_power"), 0))}<small>%</small></div>${sparkline("fan_power", cssColor("--viz-blue", "#4a8fe8"), 30)}</article>
-
-          <article class="card metric-card"><div class="metric-top"><span>⌘</span>MIESZACZ</div><div class="metric-value blue">${escapeHtml(fmt(mixerTemp))}<small>°C</small></div><div class="status-metric-note">Zadana: ${escapeHtml(fmt(mixerTarget))}°C</div>${sparkline("mixer_temp", cssColor("--chart-s4", "#bb8b16"), 30)}</article>
-          <article class="card metric-card"><div class="metric-top"><span>💧</span>CWU</div><div class="metric-value blue">${escapeHtml(fmt(cwu))}<small>°C</small></div><div class="status-metric-note">Zadana: ${escapeHtml(fmt(cwuTarget))}°C</div>${sparkline("water_heater_temp", cssColor("--chart-s3", "#4a8fe8"), 30)}</article>
-          <article class="card metric-card"><div class="metric-top"><span>▧</span>POZIOM PALIWA</div><div class="metric-value green">${escapeHtml(fmt(fuelLevel, 0))}<small>%</small></div>${sparkline("fuel_level", cssColor("--viz-green", "#34c98e"), 30)}</article>
+          <article class="card metric-card centered-reading"><div class="metric-top"><span>▧</span>POZIOM PALIWA</div><div class="metric-value green">${escapeHtml(fmt(fuelLevel, 0))}<small>%</small></div></article>
           <button type="button" class="card metric-card metric-action-card${hasActiveAlarm ? " alarm-active" : ""}" data-open-view="alarms"><div class="metric-top"><span>${hasActiveAlarm ? "⚠" : "✓"}</span>ALARMY AKTYWNE</div><div class="metric-value ${hasActiveAlarm ? "red" : "green"}">${escapeHtml(fmt(activeAlarmCount, 0))}</div><div class="status-metric-note">Kliknij, aby otworzyć alarmy</div></button>
         </div>
 

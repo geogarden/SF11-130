@@ -291,7 +291,7 @@ test('overview requests 24 hours of persisted history and removes remote footer'
   assert(p.state.overviewHistory.some(row=>Date.parse(row.ts)<now-12*3600000));
   const html=p.overviewHtml();
   assert(!html.includes('HISTORIA TEMPERATUR · OSTATNIE 24 GODZINY'));
-  assert.equal((html.match(/Ostatnie 12 godzin/g)||[]).length,6);
+  assert.equal((html.match(/Ostatnie 12 godzin/g)||[]).length,2);
   assert(!html.includes('remote-card'));
   assert(!html.includes('DOSTĘP ZDALNY'));
 });
@@ -377,10 +377,13 @@ test('merged overview starts with hydraulic scheme and omits removed widgets',()
  const html=p.overviewHtml();
  assert(html.indexOf('data-installation-scheme') < html.indexOf('OBCIĄŻENIE'));
  for(const removed of ['overviewHistoryCanvas','scheme-legend','SCHEMAT HYDRAULICZNY · UKŁAD DEKLAROWANY']) assert(!html.includes(removed),removed);
- for(const retained of ['67,1','41','9,8','74,6','overviewPowerRuntime','data-open-view="alarms"']) assert(html.includes(retained),retained);
+ for(const retained of ['67,1','9,8','74,6','overviewPowerRuntime','data-open-view="alarms"']) assert(html.includes(retained),retained);
  assert(!html.includes('Temp. podajnika'));
- const cards=html.slice(html.indexOf('class="card hero-card"'),html.indexOf('OBCIĄŻENIE'));
- for(const expected of ['TEMPERATURA KOTŁA','67,1<small>°C','TLEN · SONDA LAMBDA','>PODAJNIK</div>','41<small>°C','data-spark-key="feeder_temp"']) assert(cards.includes(expected),expected);
+ const cards=html.split('class="metric-row merged-metrics">')[1].split('class="middle-row')[0];
+ assert.deepEqual([...cards.matchAll(/class="(?:hero-label|metric-top)">(?:<span>.*?<\/span>)?([^<]+)/g)].map(m=>m[1]),
+   ['TEMPERATURA KOTŁA','OBCIĄŻENIE','WENTYLATOR','TLEN · SONDA LAMBDA','POZIOM PALIWA','ALARMY AKTYWNE']);
+ assert.deepEqual([...cards.matchAll(/data-spark-key="([^"]+)"/g)].map(m=>m[1]), ['boiler_load','fan_power']);
+ assert.equal((cards.match(/centered-reading/g)||[]).length,3);
 });
 
 

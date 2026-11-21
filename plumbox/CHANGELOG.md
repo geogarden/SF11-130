@@ -1,3 +1,7 @@
+## 1.0.17
+
+- Pod schematem umieszczono sześć kafelków w jednym przewijanym rzędzie. Powiększono i wyśrodkowano temperaturę kotła, tlen i poziom paliwa. Wykresy pozostały przy obciążeniu i wentylatorze.
+
 ## 1.0.16
 
 - Kolor chmury zmienia się wraz z temperaturą zewnętrzną według palety odwzorowanej z mapy IMGW. Wypełnienie zachowuje 80% przezroczystości.

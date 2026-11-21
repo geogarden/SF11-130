@@ -2,7 +2,7 @@ ARG BUILD_FROM=ghcr.io/home-assistant/base:latest
 FROM ${BUILD_FROM}
 
 LABEL \
-  io.hass.version="1.0.16" \
+  io.hass.version="1.0.17" \
   io.hass.type="app" \
   io.hass.arch="aarch64|amd64|armv7"
 
