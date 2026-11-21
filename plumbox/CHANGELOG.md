@@ -1,3 +1,8 @@
+## 1.0.14
+
+- Powiększono temperatury kotła, zewnętrzną i CWU o 2 pkt na schemacie.
+- Przeniesiono odczyt obiegu grzejnikowego z temperaturą zadaną na środek grzejnika.
+
 ## 1.0.13
 
 - Temperatury kotła i CWU na grafice urządzeń, wyśrodkowane ramki na drzwiach kotła, żółty trybik pracującego podajnika i ikona chmury przy temperaturze zewnętrznej.

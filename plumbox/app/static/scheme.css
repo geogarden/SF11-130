@@ -505,7 +505,16 @@
 .scheme-temp span { display: block; }
 .scheme-temp b { color: #51536c; font-size: 16px; }
 .scheme-temp span { color: #999; font-size: 10px; }
-.scheme-temp-co { left: 958px; top: 91px; }
+.installation-scheme :is(.boiler-door-temp, .scheme-weather, .scheme-temp-cwu) > b {
+  font-size: 14pt;
+}
+
+.scheme-temp-co {
+  left: 858px;
+  top: 107px;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
 
 .scheme-flow-note {
   position: absolute;
