@@ -975,12 +975,15 @@ td strong { color: var(--text-strong); }
 /* Propozycja: schemat jako początek wspólnego Podglądu. */
 .merged-overview .installation-scheme {margin-bottom:20px}
 .merged-overview, .merged-overview .dashboard-main { min-width: 0; }
+.merged-overview .dashboard-main { container: overview / inline-size; }
 .merged-overview #overviewPowerRuntime { width: 100%; }
 .merged-overview .merged-metrics {
-  grid-template-columns: repeat(5, minmax(170px, 1fr)) minmax(120px, .65fr);
-  overflow-x: auto;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
   gap: 10px;
   margin-bottom: 16px;
+}
+@container overview (min-width: 1020px) {
+  .merged-overview .merged-metrics { grid-template-columns: repeat(5, minmax(170px, 1fr)) minmax(120px, .65fr); }
 }
 .boiler-phase {
   --phase-color: var(--muted);

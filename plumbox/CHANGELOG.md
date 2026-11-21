@@ -1,3 +1,7 @@
+## 1.0.19
+
+- Kafelki pod schematem przechodzą do kolejnych rzędów na wąskich ekranach. Odczyt temperatury kotła i wartość zadana są teraz w kafelku pod schematem.
+
 ## 1.0.18
 
 - Obok tytułu podglądu wyświetlany jest bieżący tryb kotła. Zwężono kafelek aktywnych alarmów i wyśrodkowano licznik.
