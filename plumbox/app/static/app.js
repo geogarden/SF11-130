@@ -816,22 +816,19 @@
       <div class="scheme-canvas">
         <div class="scheme-plant">
           <div class="scheme-equipment">
-          <div class="scheme-weather">temperatura zewnętrzna <b>${outsideTemp === null ? "—" : outsideTemp.toFixed(1).replace(".", ",")}°C</b></div>
+          <div class="scheme-weather"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6.5 18.5a4.5 4.5 0 0 1-.55-8.97 6.1 6.1 0 0 1 11.8-.95 5 5 0 0 1 .25 9.92Z"/></svg><span>temperatura zewnętrzna</span> <b>${outsideTemp === null ? "—" : outsideTemp.toFixed(1).replace(".", ",")}°C</b></div>
           <div class="scheme-exhaust" aria-label="Temperatura spalin">SPALINY <b>${escapeHtml(exhaustText)}°C</b></div>
           <div class="scheme-thermostat"><span>TERMOSTAT</span><b>${escapeHtml(thermostatText)}</b></div>
 
           <div class="scheme-boiler scheme-boiler-photo">
             <img class="scheme-boiler-image" src="assets/boiler.svg" width="500" height="500" alt="Kocioł na pellet HKS Lazar SmartFire SF 11/130" decoding="async">
+            <div class="scheme-temp boiler-door-temp" aria-label="Temperatura kotła"><b>${escapeHtml(fmt(finiteNumber(val("heating_temp", null))))}°C</b><span>zadana ${escapeHtml(fmt(effectiveHeatingTarget()))}°C</span></div>
             <div class="scheme-boiler-data">
             <div class="scheme-burner-readout"><span>podajnik</span><span class="scheme-feed-status${feeder === true && state.snapshot?.connected ? " active" : ""}"><span role="img" aria-label="${!state.snapshot?.connected || feeder === null ? "Brak odczytu podajnika" : feeder ? "Podajnik pracuje" : "Podajnik zatrzymany"}"><svg class="scheme-feeder-gear" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M20.444 8.885L20.783 10.037L23.821 9.937L23.821 14.063L20.783 13.963L20.444 15.115L20.173 15.768L19.599 16.822L21.818 18.900L18.900 21.818L16.822 19.599L15.768 20.173L15.115 20.444L13.963 20.783L14.063 23.821L9.937 23.821L10.037 20.783L8.885 20.444L8.232 20.173L7.178 19.599L5.100 21.818L2.182 18.900L4.401 16.822L3.827 15.768L3.556 15.115L3.217 13.963L0.179 14.063L0.179 9.937L3.217 10.037L3.556 8.885L3.827 8.232L4.401 7.178L2.182 5.100L5.100 2.182L7.178 4.401L8.232 3.827L8.885 3.556L10.037 3.217L9.937 0.179L14.063 0.179L13.963 3.217L15.115 3.556L15.768 3.827L16.822 4.401L18.900 2.182L21.818 5.100L19.599 7.178L20.173 8.232Z M16 12 A4 4 0 1 0 8 12 A4 4 0 1 0 16 12Z"/></svg></span></span></div>
             </div>
           </div>
 
           <div class="scheme-hydraulics">
-          <div class="scheme-port scheme-port-co-supply"><i></i><span>ZASILANIE CO</span></div>
-          <div class="scheme-port scheme-port-co-return"><i></i><span>POWRÓT CO</span></div>
-          <div class="scheme-cwu-label scheme-cwu-label-supply">ZASILANIE CWU</div>
-          <div class="scheme-cwu-label scheme-cwu-label-return">POWRÓT CWU</div>
 
           <div class="scheme-pipe scheme-boiler-feed horizontal red"><i></i></div>
           <div class="scheme-pipe scheme-co-supply-h co-flow horizontal red"><i></i></div>
@@ -860,10 +857,9 @@
           <div class="scheme-pump scheme-pump-cwu${schemePumpClass(cwuPump)}"><i></i><span></span><small>POMPA CWU</small></div>
           <div class="scheme-tank">
             <span class="scheme-tap"><b></b><em></em><i></i></span>
-            <div class="scheme-coil"><i></i><i></i><i></i></div>
+            <div class="scheme-temp scheme-temp-cwu"><b>${escapeHtml(fmt(cwuTemp))}°C</b><span>zadana ${escapeHtml(fmt(cwuTarget))}°C</span></div>
             <small>ZASOBNIK CWU</small>
           </div>
-          <div class="scheme-temp scheme-temp-cwu"><b>${escapeHtml(fmt(cwuTemp))}°C</b><span>zadana ${escapeHtml(fmt(cwuTarget))}°C</span></div>
 
           </div>
           </div>

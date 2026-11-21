@@ -1,3 +1,8 @@
+## 1.0.13
+
+- Temperatury kotła i CWU na grafice urządzeń, wyśrodkowane ramki na drzwiach kotła, żółty trybik pracującego podajnika i ikona chmury przy temperaturze zewnętrznej.
+- Przesunięte pompy i uproszczone oznaczenia połączeń hydraulicznych.
+
 ## 1.0.12
 
 - Wyśrodkowano schemat na telefonie, zmieniono podpis na „podajnik” i usunięto górny kafelek pomp.

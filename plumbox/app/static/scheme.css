@@ -67,20 +67,12 @@
 .scheme-equipment { position: absolute; top: 0; left: -240px; width: 1360px; height: 610px; }
 
 .scheme-weather {
-  position: absolute;
-  z-index: 10;
-  left: 520px;
-  width: 250px;
-  box-sizing: border-box;
-  text-align: center;
-  top: 34px;
-  padding: 6px 14px;
-  border-radius: 99px;
-  background: #086579;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 800;
+  position:absolute; z-index:10; left:520px; top:34px; width:250px;
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  color:var(--text); font-size:12px; font-weight:700;
 }
+.scheme-weather svg {width:30px;height:30px;flex:none;color:var(--muted);}
+.scheme-weather b {font-size:16px;white-space:nowrap;}
 .scheme-thermostat {
   position: absolute;
   left: 345px;
@@ -113,6 +105,7 @@
 .scheme-thermostat b { margin-top: 3px; color: #5d5f82; font-size: 13px; }
 
 .scheme-boiler {
+  --door-center: 174px;
   position: absolute;
   left: 170px;
   bottom: 54px;
@@ -133,7 +126,8 @@
 /* A flow layout keeps readouts together when text wraps or fonts are enlarged. */
 .scheme-boiler-data {
   position: absolute;
-  left: 109px;
+  left: var(--door-center);
+  transform: translateX(-50%);
   bottom: 22px;
   width: 114px;
   display: flex;
@@ -301,12 +295,12 @@
 .scheme-pipe.vertical.blue > i::after,
 .scheme-pipe.vertical.orange > i::after { animation-name: scheme-flow-down; }
 
-.scheme-boiler-feed { left: 298px; top: 311px; width: 427px; }
+.scheme-boiler-feed { left: 290px; top: 311px; width: 435px; }
 .scheme-co-supply-h { left: 725px; top: 311px; width: 115px; }
 .scheme-co-supply-v { left: 833px; top: 145px; height: 173px; }
 .scheme-co-return-v { left: 875px; top: 145px; height: 315px; }
 .scheme-co-return-h { left: 520px; top: 453px; width: 362px; }
-.scheme-protect-return { left: 298px; top: 453px; width: 227px; }
+.scheme-protect-return { left: 290px; top: 453px; width: 235px; }
 .scheme-atv-branch { left: 560px; top: 311px; height: 115px; }
 .scheme-cwu-feed { left: 725px; top: 311px; width: 62px; }
 .scheme-cwu-feed-v { left: 780px; top: 311px; height: 197px; }
@@ -348,10 +342,6 @@
   border: 2px solid #4d5357;
   border-radius: 13px;
   background:
-    radial-gradient(circle at 0 10px, #fff 0 4px, #41474c 5px 7px, transparent 8px),
-    radial-gradient(circle at 100% 10px, #fff 0 4px, #41474c 5px 7px, transparent 8px),
-    radial-gradient(circle at 0 164px, #fff 0 4px, #41474c 5px 7px, transparent 8px),
-    radial-gradient(circle at 100% 164px, #fff 0 4px, #41474c 5px 7px, transparent 8px),
     linear-gradient(to bottom, #ef746b 0 38%, #e9d7a8 48%, #91d7df 61%, #4ab9da 100%);
   box-shadow: inset 7px 0 9px rgba(255,255,255,.38), inset -7px 0 9px rgba(0,0,0,.12), 0 5px 10px rgba(0,0,0,.12);
 }
@@ -411,9 +401,9 @@
 }
 .scheme-pump-co { left: 813px; top: 188px; }
 .scheme-pump-co small { right: 53px; top: 13px; }
-.scheme-pump-boiler { left: 476px; top: 429px; }
+.scheme-pump-boiler { left: 392px; top: 429px; }
 .scheme-pump-boiler small { left: -15px; top: -27px; }
-.scheme-pump-cwu { left: 811px; top: 479px; }
+.scheme-pump-cwu { left: 923px; top: 479px; }
 .scheme-pump-cwu small { left: -15px; top: -26px; padding: 1px 5px; border-radius: 4px; background: #f4f6f7; }
 .installation-scheme.co-active .scheme-pump-co > i,
 .installation-scheme.cwu-active .scheme-pump-cwu > i,
@@ -461,29 +451,6 @@
   border-radius: 48px;
   background: linear-gradient(to bottom, #ef4e43 0%, #f66e4e 29%, #efb35c 48%, #65cba2 68%, #09a8dc 100%);
   box-shadow: 0 12px 18px rgba(0,0,0,.14);
-}
-.scheme-tank::before,
-.scheme-tank::after {
-  content: "";
-  position: absolute;
-  left: -9px;
-  width: 13px;
-  height: 13px;
-  z-index: 8;
-  border: 3px solid #50536d;
-  border-radius: 50%;
-  background: #fff;
-}
-.scheme-tank::before { top: 267px; }
-.scheme-tank::after { top: 307px; }
-.scheme-coil { position: absolute; left: 28px; right: 28px; top: 180px; z-index: 3; }
-.scheme-coil i {
-  display: block;
-  height: 39px;
-  margin-bottom: -7px;
-  border: 7px solid #5d5c84;
-  border-left: 0;
-  border-radius: 0 24px 24px 0;
 }
 .scheme-tap { position: absolute; right: 16px; top: -35px; width: 52px; height: 42px; }
 .scheme-tap b {
@@ -539,7 +506,7 @@
 .scheme-temp b { color: #51536c; font-size: 16px; }
 .scheme-temp span { color: #999; font-size: 10px; }
 .scheme-temp-co { left: 958px; top: 91px; }
-.scheme-temp-cwu { left: 1060px; top: 177px; }
+
 .scheme-flow-note {
   position: absolute;
   left: 50%;
@@ -631,9 +598,21 @@
 
 
 /* Podajnik: szary w postoju, zielony i obracający się podczas pracy. */
-.scheme-feeder-gear {display:block;width:24px;height:24px;color:var(--muted,#92a0b3);animation:none;transform-origin:center}
-.scheme-feed-status.active .scheme-feeder-gear {color:var(--scheme-green,#27c96f);animation:scheme-feeder-spin 2s linear infinite}
+.scheme-feeder-gear {display:block;width:24px;height:24px;color:#62666a;animation:none;transform-origin:center}
+.scheme-feed-status.active .scheme-feeder-gear {color:#ffe52c;filter:drop-shadow(0 1px 1px #614300);animation:scheme-feeder-spin 2s linear infinite}
 @keyframes scheme-feeder-spin {to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.scheme-feed-status.active .scheme-feeder-gear{animation:none}}
 
 .scheme-oxygen {position:absolute;z-index:10;left:16px;top:114px;width:158px;min-height:24px;display:flex;align-items:center;justify-content:center;gap:5px;padding:4px 10px;border-radius:99px;background:#285c9d;color:#fff;font-size:12px;font-weight:800;white-space:nowrap}
+
+.scheme-pump-boiler small, .scheme-pump-cwu small {
+  left: 50%; transform: translateX(-50%); width: max-content;
+}
+.scheme-boiler .boiler-door-temp { left: var(--door-center); top: 57px; transform: translateX(-50%); }
+.scheme-tank .scheme-temp-cwu { left: 50%; top: 17%; transform: translate(-50%, -50%); }
+.installation-scheme .scheme-equipment :is(.boiler-door-temp, .scheme-temp-cwu, .scheme-burner-readout) {
+  text-align: center; background: transparent; border: 1.5px solid #181818; box-shadow: none;
+}
+.installation-scheme .scheme-equipment :is(.boiler-door-temp, .scheme-temp-cwu) { width: max-content; }
+.installation-scheme .scheme-equipment :is(.boiler-door-temp, .scheme-temp-cwu) :is(b,span),
+.installation-scheme .scheme-boiler .scheme-burner-readout > span:first-child { color: #000; }
