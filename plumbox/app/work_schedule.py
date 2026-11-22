@@ -1,4 +1,4 @@
-"""Controller-owned boiler_work plan (index 3), through PyPlumIO 0.7.10.
+"""Controller-owned boiler_work plan (index 3), through PyPlumIO 0.7.11.
 
 UI/semantics adapted from geogarden/ecomax-esp32-gateway, main a21f66a.
 Monday first in the API; PyPlumIO's wire order remains Sunday first.
@@ -111,9 +111,9 @@ class WorkSchedule:
         async def on_parameter(item: Any) -> None:
             await on_metadata("parameter", item)
 
-        device.subscribe("schedules", on_week)
-        device.subscribe(f"{NAME}_schedule_switch", on_switch)
-        device.subscribe(f"{NAME}_schedule_parameter", on_parameter)
+        unsubscribe_week = device.subscribe("schedules", on_week)
+        unsubscribe_switch = device.subscribe(f"{NAME}_schedule_switch", on_switch)
+        unsubscribe_parameter = device.subscribe(f"{NAME}_schedule_parameter", on_parameter)
         try:
             # device.request/get can immediately return cached data, so wait for
             # NEW schedule and metadata events instead of a generic frame counter.
@@ -131,9 +131,9 @@ class WorkSchedule:
         except asyncio.TimeoutError as exc:
             raise RuntimeError("Sterownik nie odpowiedział na odczyt harmonogramu. Spróbuj odczytać ponownie.") from exc
         finally:
-            device.unsubscribe("schedules", on_week)
-            device.unsubscribe(f"{NAME}_schedule_switch", on_switch)
-            device.unsubscribe(f"{NAME}_schedule_parameter", on_parameter)
+            unsubscribe_week()
+            unsubscribe_switch()
+            unsubscribe_parameter()
             for future in (week_reply, metadata_reply):
                 if not future.done():
                     future.cancel()

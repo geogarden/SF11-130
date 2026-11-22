@@ -1,3 +1,7 @@
+## 1.0.21
+
+- Zaktualizowano bibliotekę komunikacji ze sterownikiem pyplumio z 0.7.10 do 0.7.11.
+
 ## 1.0.20
 
 - Zmniejszono minimalną wysokość kafelków do 96 px i dopasowano rozmiar odczytów. Obciążenie i wentylator pokazują wyśrodkowane wartości bez wykresów. Usunięto dodatkowe podpisy z obciążenia i alarmów.
