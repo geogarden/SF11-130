@@ -57,7 +57,10 @@
     ["mixer_temp", cssColor("--chart-s4", "#bb8b16"), "Mieszacz"],
   ];
 
-  const overviewChartSeries = () => chartSeries();
+  const powerHistorySeries = () => [
+    ["boiler_load", cssColor("--viz-green", "#34c98e"), "Obciążenie", "%"],
+    ["fan_power", cssColor("--viz-blue", "#4a8fe8"), "Wentylator", "%"],
+  ];
 
   const appBase = new URL(location.href);
   if (!appBase.pathname.endsWith("/")) appBase.pathname += "/";
@@ -1078,7 +1081,7 @@
   async function historyHtml() {
     try { state.historyRows = (await api(`/api/history?hours=${state.historyHours}&limit=10000`)).rows || []; } catch { state.historyRows = []; }
     setTimeout(drawMainHistoryChart, 0);
-    return `<section class="panel"><div class="section-head"><h2>Historia temperatur</h2><p>Dane zapisane lokalnie przez PlumBox.</p></div><div class="chart-toolbar">${[6,24,48,168,720].map((hours) => `<button data-history-hours="${hours}" class="${state.historyHours === hours ? "active" : ""}">${hours < 24 ? `${hours} h` : `${hours / 24} dni`}</button>`).join("")}</div>${chartLegendHtml()}<div class="chart-wrap"><canvas id="historyChart"></canvas></div></section>`;
+    return `<section class="panel"><div class="section-head"><h2>Historia temperatur</h2><p>Dane zapisane lokalnie przez PlumBox.</p></div><div class="chart-toolbar">${[6,24,48,168,720].map((hours) => `<button data-history-hours="${hours}" class="${state.historyHours === hours ? "active" : ""}">${hours < 24 ? `${hours} h` : `${hours / 24} dni`}</button>`).join("")}</div>${chartLegendHtml()}<div class="chart-wrap"><canvas id="historyChart"></canvas></div></section><section class="panel"><div class="section-head"><h2>Obciążenie i wentylator</h2></div>${chartLegendHtml(powerHistorySeries())}<div class="chart-wrap"><canvas id="powerHistoryChart"></canvas></div></section>`;
   }
 
   function allHtml(search = "") {
@@ -1251,6 +1254,8 @@
         if (overviewCanvas?.__chartArgs) paintLineChart(overviewCanvas, null);
         const historyCanvas = $("historyChart");
         if (historyCanvas?.__chartArgs) paintLineChart(historyCanvas, null);
+        const powerCanvas = $("powerHistoryChart");
+        if (powerCanvas?.__chartArgs) paintLineChart(powerCanvas, null);
       }
     });
 
@@ -1331,13 +1336,15 @@
       + "|" + (document.documentElement.dataset.theme || "dark");
     if (!force && canvas.dataset.drawnFor === stamp) return;
     canvas.dataset.drawnFor = stamp;
-    drawLineChart(canvas, state.overviewHistory, overviewChartSeries(), true);
+    drawLineChart(canvas, state.overviewHistory, chartSeries(), true);
   }
 
   function drawMainHistoryChart() {
     const canvas = $("historyChart");
     if (!canvas) return;
     drawLineChart(canvas, state.historyRows, chartSeries(), false);
+    const powerCanvas = $("powerHistoryChart");
+    if (powerCanvas) drawLineChart(powerCanvas, state.historyRows, powerHistorySeries(), false);
   }
 
   function drawLineChart(canvas, rows, series, compact) {
@@ -1370,6 +1377,7 @@
   function paintLineChart(canvas, hoverIndex, hoverKey = null) {
     const { rows, series, compact } = canvas.__chartArgs;
     const visible = series.filter(([key]) => !state.hiddenSeries.has(key));
+    const showLoad = visible.some(([, , , unit]) => unit === "%");
     const rect = canvas.getBoundingClientRect();
     const ratio = window.devicePixelRatio || 1;
     canvas.width = Math.max(300, Math.round(rect.width * ratio));
@@ -1384,15 +1392,32 @@
     ctx.strokeStyle = cssColor("--chart-grid", "rgba(255,255,255,.08)");
     ctx.fillStyle = cssColor("--chart-ink", "#89949d");
     ctx.font = compact ? "600 11px system-ui" : "600 12px system-ui";
-    const values = [];
-    visible.forEach(([key]) => rows.forEach((row) => { const number = finiteNumber(row[key]); if (number !== null) values.push(number); }));
-    if (values.length < 2) { ctx.fillText("Brak danych", pad.left + 10, pad.top + 20); return; }
-    const min = Math.floor((Math.min(...values) - 5) / 10) * 10;
-    const max = Math.ceil((Math.max(...values) + 5) / 10) * 10;
-    const range = Math.max(1,max-min);
-    canvas.__layout = { pad, plotW, plotH, min, range };
-    ctx.fillText("°C", 3, 14);
-    for (let i=0;i<=3;i++) { const y=pad.top+plotH*i/3; ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(width-pad.right,y); ctx.stroke(); ctx.fillText(String(Math.round(max-range*i/3)),3,y+4); }
+    const temperatures = [];
+    let count = 0;
+    for (const [key, , , unit] of visible) {
+      for (const row of rows) {
+        const value = finiteNumber(row[key]);
+        if (value === null) continue;
+        count++;
+        if (unit !== "%") temperatures.push(value);
+      }
+    }
+    if (count < 2) { ctx.fillText("Brak danych", pad.left + 10, pad.top + 20); return; }
+    const min = temperatures.length ? Math.floor((Math.min(...temperatures) - 5) / 10) * 10 : 0;
+    const max = temperatures.length ? Math.ceil((Math.max(...temperatures) + 5) / 10) * 10 : 100;
+    const range = max - min;
+    const yFor = (value, unit) => pad.top + plotH * (1 - (unit === "%" ? value / 100 : (value - min) / range));
+    canvas.__layout = { pad, plotW, plotH, min, range, yFor };
+    if (temperatures.length) ctx.fillText("°C", 3, 14);
+    if (showLoad) ctx.fillText("%", 3, 14);
+    const divisions = showLoad ? 4 : 3;
+    for (let i = 0; i <= divisions; i++) {
+      const fraction = i / divisions;
+      const y = pad.top + plotH * fraction;
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(width - pad.right, y); ctx.stroke();
+      if (temperatures.length) ctx.fillText(String(Math.round(max - range * fraction)), 3, y + 4);
+      if (showLoad) ctx.fillText(String(100 * (1 - fraction)), 3, y + 4);
+    }
     if (!compact && rows.length > 1) {
       const ticks = hourlyChartTicks(rows);
       const xFor = tick => pad.left + plotW * tick.index / Math.max(1, rows.length - 1);
@@ -1423,7 +1448,7 @@
     }
     // Przy najeździe wyróżniamy tylko serię najbliższą kursorowi:
     // pozostałe są przygaszone, kropka i dymek dotyczą jednej linii.
-    visible.forEach(([key,color]) => { ctx.globalAlpha = hoverKey && key !== hoverKey ? 0.25 : 1; ctx.strokeStyle=color; ctx.lineWidth=(hoverKey === key ? 1 : 0) + (compact?2:2.5); ctx.beginPath(); let started=false; rows.forEach((row,index)=>{ const number=finiteNumber(row[key]); if(number===null)return; const x=pad.left+plotW*index/Math.max(1,rows.length-1); const y=pad.top+plotH-((number-min)/range)*plotH; if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);}); ctx.stroke(); });
+    visible.forEach(([key,color,,unit]) => { ctx.globalAlpha = hoverKey && key !== hoverKey ? 0.25 : 1; ctx.strokeStyle=color; ctx.lineWidth=(hoverKey === key ? 1 : 0) + (compact?2:2.5); ctx.beginPath(); let started=false; rows.forEach((row,index)=>{ const number=finiteNumber(row[key]); if(number===null){started=false;return;} const x=pad.left+plotW*index/Math.max(1,rows.length-1); const y=yFor(number,unit); if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);}); ctx.stroke(); });
     ctx.globalAlpha = 1;
     if (hoverIndex !== null && hoverIndex >= 0 && hoverIndex < rows.length) {
       const x = pad.left + plotW * hoverIndex / Math.max(1, rows.length - 1);
@@ -1432,11 +1457,11 @@
       ctx.setLineDash([4, 4]);
       ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + plotH); ctx.stroke();
       ctx.setLineDash([]);
-      visible.forEach(([key, color]) => {
+      visible.forEach(([key, color, , unit]) => {
         if (hoverKey && key !== hoverKey) return;
         const number = finiteNumber(rows[hoverIndex][key]);
         if (number === null) return;
-        const y = pad.top + plotH - ((number - min) / range) * plotH;
+        const y = yFor(number, unit);
         ctx.beginPath(); ctx.arc(x, y, 4.5, 0, Math.PI * 2);
         ctx.fillStyle = color; ctx.fill();
         ctx.strokeStyle = cssColor("--bg", "#0b1017"); ctx.lineWidth = 2; ctx.stroke();
@@ -1472,17 +1497,17 @@
       const cursorY = event.clientY - rect.top;
       // Wybieramy serię najbliższą kursorowi w pionie — tylko ją wyróżniamy.
       let hovered = null, bestDistance = Infinity;
-      visible.forEach(([key, color, label]) => {
+      visible.forEach(([key, color, label, unit = "°C"]) => {
         const number = finiteNumber(row[key]);
         if (number === null) return;
-        const y = layout.pad.top + layout.plotH - ((number - layout.min) / layout.range) * layout.plotH;
+        const y = layout.yFor(number, unit);
         const distance = Math.abs(y - cursorY);
-        if (distance < bestDistance) { bestDistance = distance; hovered = { key, color, label, number, y }; }
+        if (distance < bestDistance) { bestDistance = distance; hovered = { key, color, label, number, unit, y }; }
       });
       paintLineChart(canvas, index, hovered?.key ?? null);
       if (!hovered) { tip.classList.add("hidden"); return; }
       tip.innerHTML = `<div class="tip-time">${escapeHtml(formatDate(row.ts))}</div>` +
-        `<div class="tip-row"><i style="--legend-color:${hovered.color}"></i>${escapeHtml(hovered.label)}<strong>${escapeHtml(fmt(hovered.number, 1))}°C</strong></div>`;
+        `<div class="tip-row"><i style="--legend-color:${hovered.color}"></i>${escapeHtml(hovered.label)}<strong>${escapeHtml(fmt(hovered.number, hovered.unit === "%" ? 0 : 1))}${hovered.unit}</strong></div>`;
       tip.classList.remove("hidden");
       const x = event.clientX - rect.left;
       const flip = x + tip.offsetWidth + 24 > rect.width;

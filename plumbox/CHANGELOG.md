@@ -1,3 +1,7 @@
+## 1.0.22
+
+- W historii temperatur pod wykresem kotła, CWU i mieszacza dodano wykres obciążenia kotła i wentylatora ze wspólną skalą 0–100%. Oba wykresy pokazują ten sam zakres czasu.
+
 ## 1.0.21
 
 - Zaktualizowano bibliotekę komunikacji ze sterownikiem pyplumio z 0.7.10 do 0.7.11.

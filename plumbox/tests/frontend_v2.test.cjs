@@ -213,7 +213,9 @@ test('temperature history chart and legend exclude the return series',async()=>{
   assert.deepEqual(Array.from(p.chartSeries(),item=>item[0]),['heating_temp','water_heater_temp','mixer_temp']);
   const html=await p.historyHtml();
   assert(!html.includes('return_temp'));assert(!html.includes('Powrót'));
-  for(const label of ['Kocioł','CWU','Mieszacz'])assert(html.includes(label));
+  assert(html.indexOf('id="historyChart"') < html.indexOf('data-series-toggle="boiler_load"'));
+  assert(html.includes('id="powerHistoryChart"'));
+  for(const label of ['Kocioł','CWU','Mieszacz','Obciążenie','Wentylator'])assert(html.includes(label));
 });
 
 
