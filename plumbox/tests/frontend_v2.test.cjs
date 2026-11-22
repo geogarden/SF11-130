@@ -291,7 +291,7 @@ test('overview requests 24 hours of persisted history and removes remote footer'
   assert(p.state.overviewHistory.some(row=>Date.parse(row.ts)<now-12*3600000));
   const html=p.overviewHtml();
   assert(!html.includes('HISTORIA TEMPERATUR · OSTATNIE 24 GODZINY'));
-  assert.equal((html.match(/Ostatnie 12 godzin/g)||[]).length,2);
+  assert(!html.includes('Ostatnie 12 godzin'));
   assert(!html.includes('remote-card'));
   assert(!html.includes('DOSTĘP ZDALNY'));
 });
@@ -382,8 +382,10 @@ test('merged overview starts with hydraulic scheme and omits removed widgets',()
  const cards=html.split('class="metric-row merged-metrics">')[1].split('class="middle-row')[0];
  assert.deepEqual([...cards.matchAll(/class="(?:hero-label|metric-top)">(?:<span>.*?<\/span>)?([^<]+)/g)].map(m=>m[1]),
    ['TEMPERATURA KOTŁA','OBCIĄŻENIE','WENTYLATOR','TLEN · SONDA LAMBDA','POZIOM PALIWA','ALARMY AKTYWNE']);
- assert.deepEqual([...cards.matchAll(/data-spark-key="([^"]+)"/g)].map(m=>m[1]), ['boiler_load','fan_power']);
- assert.equal((cards.match(/centered-reading/g)||[]).length,4);
+ assert(!cards.includes('data-spark-key'));
+ assert(!cards.includes('Wartość przekazana przez sterownik'));
+ assert(!cards.includes('Kliknij, aby otworzyć alarmy'));
+ assert.equal((cards.match(/centered-reading/g)||[]).length,6);
 });
 
 

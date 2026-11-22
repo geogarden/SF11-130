@@ -1003,11 +1003,11 @@ td strong { color: var(--text-strong); }
 .merged-metrics > * { min-width: 0; }
 .merged-metrics .centered-reading {
   display:grid; grid-template-rows:1fr auto 1fr; justify-items:center;
-  align-items:center; text-align:center; padding:12px; min-height:158px;
+  align-items:center; text-align:center; padding:6px 10px; min-height:96px; row-gap:1px;
 }
 .merged-metrics .centered-reading > :first-child {grid-row:1; align-self:start; justify-content:center}
 .merged-metrics .centered-reading > :nth-child(2) {
-  grid-row:2; margin:0; font-size:clamp(52px,3.8vw,70px); line-height:1;
+  grid-row:2; margin:0; font-size:calc(clamp(52px,3.8vw,70px) - 4pt); line-height:1;
   font-variant-numeric:tabular-nums; white-space:nowrap;
 }
 .merged-metrics .centered-reading > :nth-child(2) small {font-size:.37em}

@@ -974,14 +974,14 @@
             <div class="hero-temp">${escapeHtml(fmt(heating))}<small>°C</small></div>
             <div class="status-metric-note">Temperatura zadana: <strong>${target === null ? "—" : escapeHtml(fmt(target)) + "°C"}</strong></div>
           </article>
-          <article class="card metric-card"><div class="metric-top"><span>⌁</span>OBCIĄŻENIE</div><div class="metric-value green">${escapeHtml(fmt(boilerLoad, 0))}<small>%</small></div><div class="status-metric-note">Wartość przekazana przez sterownik</div>${sparkline("boiler_load", cssColor("--viz-green", "#34c98e"), 30)}</article>
-          <article class="card metric-card"><div class="metric-top"><span>✥</span>WENTYLATOR</div><div class="metric-value blue">${escapeHtml(fmt(val("fan_power"), 0))}<small>%</small></div>${sparkline("fan_power", cssColor("--viz-blue", "#4a8fe8"), 30)}</article>
+          <article class="card metric-card centered-reading"><div class="metric-top"><span>⌁</span>OBCIĄŻENIE</div><div class="metric-value green">${escapeHtml(fmt(boilerLoad, 0))}<small>%</small></div></article>
+          <article class="card metric-card centered-reading"><div class="metric-top"><span>✥</span>WENTYLATOR</div><div class="metric-value blue">${escapeHtml(fmt(val("fan_power"), 0))}<small>%</small></div></article>
           <article class="card hero-card centered-reading">
             <div class="hero-label">TLEN · SONDA LAMBDA</div>
             <div class="hero-temp oxygen-value">${oxygenText}<small>%</small></div>
           </article>
           <article class="card metric-card centered-reading"><div class="metric-top"><span>▧</span>POZIOM PALIWA</div><div class="metric-value green">${escapeHtml(fmt(fuelLevel, 0))}<small>%</small></div></article>
-          <button type="button" class="card metric-card centered-reading metric-action-card${hasActiveAlarm ? " alarm-active" : ""}" data-open-view="alarms"><div class="metric-top"><span>${hasActiveAlarm ? "⚠" : "✓"}</span>ALARMY AKTYWNE</div><div class="metric-value ${hasActiveAlarm ? "red" : "green"}">${escapeHtml(fmt(activeAlarmCount, 0))}</div><div class="status-metric-note">Kliknij, aby otworzyć alarmy</div></button>
+          <button type="button" class="card metric-card centered-reading metric-action-card${hasActiveAlarm ? " alarm-active" : ""}" data-open-view="alarms"><div class="metric-top"><span>${hasActiveAlarm ? "⚠" : "✓"}</span>ALARMY AKTYWNE</div><div class="metric-value ${hasActiveAlarm ? "red" : "green"}">${escapeHtml(fmt(activeAlarmCount, 0))}</div></button>
         </div>
 
 
